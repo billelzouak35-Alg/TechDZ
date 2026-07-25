@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard — TechDZ</title>
+    <link rel="icon" type="image/svg+xml" href="../logo.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Kufi+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+    <div class="admin-layout">
+        <!-- SIDEBAR -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <img src="../logo.svg" alt="TechDZ">
+                <p>Panneau d'administration</p>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="#" class="sidebar-link active" data-page="dashboard">
+                    <i class="fas fa-chart-pie"></i> Tableau de bord
+                </a>
+                <a href="#" class="sidebar-link" data-page="users">
+                    <i class="fas fa-users"></i> Utilisateurs
+                    <span class="badge" id="usersCount">0</span>
+                </a>
+                <a href="#" class="sidebar-link" data-page="posts">
+                    <i class="fas fa-comments"></i> Forum
+                    <span class="badge" id="postsCount">0</span>
+                </a>
+                <a href="#" class="sidebar-link" data-page="jobs">
+                    <i class="fas fa-briefcase"></i> Emplois
+                    <span class="badge" id="jobsCount">0</span>
+                </a>
+                <a href="#" class="sidebar-link" data-page="courses">
+                    <i class="fas fa-graduation-cap"></i> Formations
+                </a>
+                <a href="#" class="sidebar-link" data-page="events">
+                    <i class="fas fa-calendar-alt"></i> Événements
+                </a>
+                <a href="#" class="sidebar-link" data-page="news">
+                    <i class="fas fa-newspaper"></i> Actualités
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="sidebar-user">
+                    <div class="sidebar-avatar" id="sidebarAvatar">A</div>
+                    <div class="sidebar-user-info">
+                        <strong id="sidebarName">Admin</strong>
+                        <span>Administrateur</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- MAIN -->
+        <main class="main-content">
+            <!-- DASHBOARD -->
+            <div class="admin-section active" id="section-dashboard">
+                <div class="page-header">
+                    <div>
+                        <h1>Tableau de bord</h1>
+                        <p>Vue d'ensemble de la plateforme TechDZ</p>
+                    </div>
+                    <button class="btn btn-primary" id="refreshBtn"><i class="fas fa-sync-alt"></i> Actualiser</button>
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-card-header">
+                            <div class="stat-card-icon blue"><i class="fas fa-users"></i></div>
+                        </div>
+                        <div class="stat-card-value" id="statUsers">0</div>
+                        <div class="stat-card-label">Utilisateurs</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-card-header">
+                            <div class="stat-card-icon green"><i class="fas fa-comments"></i></div>
+                        </div>
+                        <div class="stat-card-value" id="statPosts">0</div>
+                        <div class="stat-card-label">Posts forum</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-card-header">
+                            <div class="stat-card-icon purple"><i class="fas fa-briefcase"></i></div>
+                        </div>
+                        <div class="stat-card-value" id="statJobs">0</div>
+                        <div class="stat-card-label">Offres d'emploi</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-card-header">
+                            <div class="stat-card-icon amber"><i class="fas fa-calendar-alt"></i></div>
+                        </div>
+                        <div class="stat-card-value" id="statEvents">0</div>
+                        <div class="stat-card-label">Événements</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- USERS -->
+            <div class="admin-section" id="section-users">
+                <div class="page-header">
+                    <div>
+                        <h1>Utilisateurs</h1>
+                        <p>Gérer les membres de la communauté</p>
+                    </div>
+                </div>
+                <div class="table-container">
+                    <div class="table-header">
+                        <h2>Tous les utilisateurs</h2>
+                        <div class="table-search">
+                            <i class="fas fa-search"></i>
+                            <input type="text" placeholder="Rechercher..." id="usersSearch">
+                        </div>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Utilisateur</th>
+                                <th>Rôle</th>
+                                <th>Ville</th>
+                                <th>Inscrit le</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="usersTableBody">
+                            <tr><td colspan="5" style="text-align:center; padding:40px; color:var(--text-muted);">Chargement...</td></tr>
+                        </tbody>
+                    </table>
+                    <div class="table-pagination">
+                        <span id="usersInfo">0 utilisateurs</span>
+                        <div class="pagination-btns" id="usersPagination"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- POSTS -->
+            <div class="admin-section" id="section-posts">
+                <div class="page-header">
+                    <div>
+                        <h1>Forum</h1>
+                        <p>Moderer les discussions</p>
+                    </div>
+                </div>
+                <div class="table-container">
+                    <div class="table-header">
+                        <h2>Tous les posts</h2>
+                        <div class="table-search">
+                            <i class="fas fa-search"></i>
+                            <input type="text" placeholder="Rechercher..." id="postsSearch">
+                        </div>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Titre</th>
+                                <th>Auteur</th>
+                                <th>Catégorie</th>
+                                <th>Réponses</th>
+                                <th>Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="postsTableBody">
+                            <tr><td colspan="6" style="text-align:center; padding:40px; color:var(--text-muted);">Chargement...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- JOBS -->
+            <div class="admin-section" id="section-jobs">
+                <div class="page-header">
+                    <div>
+                        <h1>Emplois</h1>
+                        <p>Gérer les offres d'emploi</p>
+                    </div>
+                </div>
+                <div class="table-container">
+                    <div class="table-header">
+                        <h2>Toutes les offres</h2>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Poste</th>
+                                <th>Entreprise</th>
+                                <th>Lieu</th>
+                                <th>Type</th>
+                                <th>Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="jobsTableBody">
+                            <tr><td colspan="6" style="text-align:center; padding:40px; color:var(--text-muted);">Chargement...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- COURSES -->
+            <div class="admin-section" id="section-courses">
+                <div class="page-header">
+                    <div>
+                        <h1>Formations</h1>
+                        <p>Gérer les cours et formations</p>
+                    </div>
+                </div>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Titre</th>
+                                <th>Niveau</th>
+                                <th>Inscriptions</th>
+                                <th>Note</th>
+                                <th>Statut</th>
+                            </tr>
+                        </thead>
+                        <tbody id="coursesTableBody">
+                            <tr><td colspan="5" style="text-align:center; padding:40px; color:var(--text-muted);">Chargement...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- EVENTS -->
+            <div class="admin-section" id="section-events">
+                <div class="page-header">
+                    <div>
+                        <h1>Événements</h1>
+                        <p>Gérer lesmeetups, hackathons et conférences</p>
+                    </div>
+                </div>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Titre</th>
+                                <th>Type</th>
+                                <th>Lieu</th>
+                                <th>Date</th>
+                                <th>Participants</th>
+                            </tr>
+                        </thead>
+                        <tbody id="eventsTableBody">
+                            <tr><td colspan="5" style="text-align:center; padding:40px; color:var(--text-muted);">Chargement...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- NEWS -->
+            <div class="admin-section" id="section-news">
+                <div class="page-header">
+                    <div>
+                        <h1>Actualités</h1>
+                        <p>Gérer les articles et news</p>
+                    </div>
+                </div>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Titre</th>
+                                <th>Catégorie</th>
+                                <th>Auteur</th>
+                                <th>Vues</th>
+                                <th>Statut</th>
+                            </tr>
+                        </thead>
+                        <tbody id="newsTableBody">
+                            <tr><td colspan="5" style="text-align:center; padding:40px; color:var(--text-muted);">Chargement...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <script src="../config.js"></script>
+    <script src="../auth.js"></script>
+    <script src="../db.js"></script>
+    <script src="admin.js"></script>
+</body>
+</html>
