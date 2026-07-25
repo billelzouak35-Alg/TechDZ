@@ -10,5 +10,5 @@ const SUPABASE_CONFIG = {
 };
 
 // Export for use in other files
-window.SUPABASE_URL = ;
-window.SUPABASE_ANON_KEY = ;
+window.SUPABASE_URL = SUPABASE_CONFIG.url;
+window.SUPABASE_ANON_KEY = SUPABASE_CONFIG.anonKey;
