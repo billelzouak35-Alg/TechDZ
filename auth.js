@@ -22,31 +22,42 @@ const Auth = {
   },
 
   getClient() {
-    if (!this.supabase) this.init();
+    if (!this.supabase) {
+      const ok = this.init();
+      if (!ok) throw new Error('Supabase not initialized — check config.js');
+    }
     return this.supabase;
   },
 
   // Sign up with email/password
   async signUp(email, password, fullName) {
-    const client = this.getClient();
-    const { data, error } = await client.auth.signUp({
-      email,
-      password,
-      options: {
-        data: { full_name: fullName }
-      }
-    });
-    return { data, error };
+    try {
+      const client = this.getClient();
+      const { data, error } = await client.auth.signUp({
+        email,
+        password,
+        options: {
+          data: { full_name: fullName }
+        }
+      });
+      return { data, error };
+    } catch (e) {
+      return { data: null, error: { message: e.message } };
+    }
   },
 
   // Sign in with email/password
   async signIn(email, password) {
-    const client = this.getClient();
-    const { data, error } = await client.auth.signInWithPassword({
-      email,
-      password
-    });
-    return { data, error };
+    try {
+      const client = this.getClient();
+      const { data, error } = await client.auth.signInWithPassword({
+        email,
+        password
+      });
+      return { data, error };
+    } catch (e) {
+      return { data: null, error: { message: e.message } };
+    }
   },
 
   // Sign in with Google
