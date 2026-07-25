@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard — TechDZ</title>
+    <link rel="icon" type="image/svg+xml" href="../logo.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Kufi+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+    <div class="admin-layout">
+        <!-- SIDEBAR -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <img src="../logo.svg" alt="TechDZ">
+                <p>Panneau d'administration</p>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="#" class="sidebar-link active" data-page="dashboard">
+                    <i class="fas fa-chart-pie"></i> Tableau de bord
+                </a>
+                <a href="#" class="sidebar-link" data-page="users">
+                    <i class="fas fa-users"></i> Utilisateurs
+                    <span class="badge" id="usersCount">0</span>
+                </a>
+                <a href="#" class="sidebar-link" data-page="posts">
+                    <i class="fas fa-comments"></i> Forum
+                    <span class="badge" id="postsCount">0</span>
+                </a>
+                <a href="#" class="sidebar-link" data-page="jobs">
+                    <i class="fas fa-briefcase"></i> Emplois
+                    <span class="badge" id="jobsCount">0</span>
+                </a>
+                <a href="#" class="sidebar-link" data-page="courses">
+                    <i class="fas fa-graduation-cap"></i> Formations
+                </a>
+                <a href="#" class="sidebar-link" data-page="events">
+                    <i class="fas fa-calendar-alt"></i> Événements
+                </a>
+                <a href="#" class="sidebar-link" data-page="news">
+                    <i class="fas fa-newspaper"></i> Actualités
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <a href="../index.html" style="display:block; margin-bottom:8px; padding:10px 16px; border-radius:8px; color:var(--primary); font-weight:600; font-size:0.9rem; text-decoration:none;">
+                    <i class="fas fa-arrow-left"></i> Retour au site
+                </a>
+                <button class="sidebar-link" id="adminLogoutBtn" style="width:100%; background:none; border:none; cursor:pointer; text-align:left; font-size:inherit; padding:10px 16px; border-radius:8px; color:var(--red); font-weight:600;">
+                    <i class="fas fa-sign-out-alt"></i> Déconnexion
+                </button>
+                <div class="sidebar-user">
+                    <div class="sidebar-avatar" id="sidebarAvatar">A</div>
+                    <div class="sidebar-user-info">
+                        <strong id="sidebarName">Admin</strong>
+                        <span>Administrateur</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- MAIN -->
+        <main class="main-content">
+            <!-- DASHBOARD -->
+            <div class="admin-section active" id="section-dashboard">
+                <div class="page-header">
+                    <div>
+                        <h1>Tableau de bord</h1>
+                        <p>Vue d'ensemble de la plateforme TechDZ</p>
+                    </div>
+                    <button class="btn btn-primary" id="refreshBtn"><i class="fas fa-sync-alt"></i> Actualiser</button>
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-card-header">
+                            <div class="stat-card-icon blue"><i class="fas fa-users"></i></div>
+                        </div>
+                        <div class="stat-card-value" id="statUsers">0</div>
+                        <div class="stat-card-label">Utilisateurs</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-card-header">
+                            <div class="stat-card-icon green"><i class="fas fa-comments"></i></div>
+                        </div>
+                        <div class="stat-card-value" id="statPosts">0</div>
+                        <div class="stat-card-label">Posts forum</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-card-header">
+                            <div class="stat-card-icon purple"><i class="fas fa-briefcase"></i></div>
+                        </div>
+                        <div class="stat-card-value" id="statJobs">0</div>
+                        <div class="stat-card-label">Offres d'emploi</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-card-header">
+                            <div class="stat-card-icon amber"><i class="fas fa-calendar-alt"></i></div>
+                        </div>
+                        <div class="stat-card-value" id="statEvents">0</div>
+                        <div class="stat-card-label">Événements</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-card-header">
+                            <div class="stat-card-icon teal"><i class="fas fa-graduation-cap"></i></div>
+                        </div>
+                        <div class="stat-card-value" id="statCourses">0</div>
+                        <div class="stat-card-label">Formations</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-card-header">
+                            <div class="stat-card-icon red"><i class="fas fa-newspaper"></i></div>
+                        </div>
+                        <div class="stat-card-value" id="statNews">0</div>
+                        <div class="stat-card-label">Actualités</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- USERS -->
+            <div class="admin-section" id="section-users">
+                <div class="page-header">
+                    <div>
+                        <h1>Utilisateurs</h1>
+                        <p>Gérer les membres de la communauté</p>
+                    </div>
+                    <button class="btn btn-primary" onclick="document.getElementById('modalUser').classList.add('open')"><i class="fas fa-user-plus"></i> Ajouter</button>
+                </div>
+                <div class="table-container">
+                    <div class="table-header">
+                        <h2>Tous les utilisateurs</h2>
+                        <div class="table-search">
+                            <i class="fas fa-search"></i>
+                            <input type="text" placeholder="Rechercher..." id="usersSearch">
+                        </div>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Utilisateur</th>
+                                <th>Rôle</th>
+                                <th>Ville</th>
+                                <th>Inscrit le</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="usersTableBody">
+                            <tr><td colspan="5" style="text-align:center; padding:40px; color:var(--text-muted);">Chargement...</td></tr>
+                        </tbody>
+                    </table>
+                    <div class="table-pagination">
+                        <span id="usersInfo">0 utilisateurs</span>
+                        <div class="pagination-btns" id="usersPagination"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- POSTS -->
+            <div class="admin-section" id="section-posts">
+                <div class="page-header">
+                    <div>
+                        <h1>Forum</h1>
+                        <p>Moderer les discussions</p>
+                    </div>
+                    <button class="btn btn-primary" onclick="document.getElementById('modalPost').classList.add('open')"><i class="fas fa-plus"></i> Ajouter</button>
+                </div>
+                <div class="table-container">
+                    <div class="table-header">
+                        <h2>Tous les posts</h2>
+                        <div class="table-search">
+                            <i class="fas fa-search"></i>
+                            <input type="text" placeholder="Rechercher..." id="postsSearch">
+                        </div>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Titre</th>
+                                <th>Auteur</th>
+                                <th>Catégorie</th>
+                                <th>Réponses</th>
+                                <th>Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="postsTableBody">
+                            <tr><td colspan="6" style="text-align:center; padding:40px; color:var(--text-muted);">Chargement...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- JOBS -->
+            <div class="admin-section" id="section-jobs">
+                <div class="page-header">
+                    <div>
+                        <h1>Emplois</h1>
+                        <p>Gérer les offres d'emploi</p>
+                    </div>
+                    <button class="btn btn-primary" onclick="document.getElementById('modalJob').classList.add('open')"><i class="fas fa-plus"></i> Ajouter</button>
+                </div>
+                <div class="table-container">
+                    <div class="table-header">
+                        <h2>Toutes les offres</h2>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Poste</th>
+                                <th>Entreprise</th>
+                                <th>Lieu</th>
+                                <th>Type</th>
+                                <th>Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="jobsTableBody">
+                            <tr><td colspan="6" style="text-align:center; padding:40px; color:var(--text-muted);">Chargement...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- COURSES -->
+            <div class="admin-section" id="section-courses">
+                <div class="page-header">
+                    <div>
+                        <h1>Formations</h1>
+                        <p>Gérer les cours et formations</p>
+                    </div>
+                    <button class="btn btn-primary" onclick="document.getElementById('modalCourse').classList.add('open')"><i class="fas fa-plus"></i> Ajouter</button>
+                </div>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Titre</th>
+                                <th>Niveau</th>
+                                <th>Inscriptions</th>
+                                <th>Note</th>
+                                <th>Statut</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="coursesTableBody">
+                            <tr><td colspan="6" style="text-align:center; padding:40px; color:var(--text-muted);">Chargement...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- EVENTS -->
+            <div class="admin-section" id="section-events">
+                <div class="page-header">
+                    <div>
+                        <h1>Événements</h1>
+                        <p>Gérer les meetups, hackathons et conférences</p>
+                    </div>
+                    <button class="btn btn-primary" onclick="document.getElementById('modalEvent').classList.add('open')"><i class="fas fa-plus"></i> Ajouter</button>
+                </div>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Titre</th>
+                                <th>Type</th>
+                                <th>Lieu</th>
+                                <th>Date</th>
+                                <th>Participants</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="eventsTableBody">
+                            <tr><td colspan="6" style="text-align:center; padding:40px; color:var(--text-muted);">Chargement...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- NEWS -->
+            <div class="admin-section" id="section-news">
+                <div class="page-header">
+                    <div>
+                        <h1>Actualités</h1>
+                        <p>Gérer les articles et news</p>
+                    </div>
+                    <button class="btn btn-primary" onclick="document.getElementById('modalNews').classList.add('open')"><i class="fas fa-plus"></i> Ajouter</button>
+                </div>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Titre</th>
+                                <th>Catégorie</th>
+                                <th>Auteur</th>
+                                <th>Vues</th>
+                                <th>Statut</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="newsTableBody">
+                            <tr><td colspan="6" style="text-align:center; padding:40px; color:var(--text-muted);">Chargement...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- MODAL: Add Job -->
+    <div class="modal-overlay" id="modalJob">
+        <div class="modal">
+            <button class="modal-close" onclick="this.closest('.modal-overlay').classList.remove('open')"><i class="fas fa-times"></i></button>
+            <h2>Ajouter une offre d'emploi</h2>
+            <form id="formJob">
+                <div class="form-group"><label>Poste *</label><input type="text" id="jobTitle" required></div>
+                <div class="form-group"><label>Entreprise *</label><input type="text" id="jobCompany" required></div>
+                <div class="form-group"><label>Lieu *</label><input type="text" id="jobLocation" required></div>
+                <div class="form-row">
+                    <div class="form-group"><label>Type</label><select id="jobType"><option value="remote">Remote</option><option value="hybrid">Hybrid</option><option value="onsite">Sur site</option></select></div>
+                    <div class="form-group"><label>Catégorie</label><select id="jobCategory"><option value="Réseaux">Réseaux</option><option value="Système">Système</option><option value="Cybersécurité">Cybersécurité</option><option value="Développement">Développement</option><option value="Data">Data</option><option value="Design">Design</option><option value="Gestion">Gestion</option></select></div>
+                </div>
+                <div class="form-group"><label>Description *</label><textarea id="jobDesc" required></textarea></div>
+                <div class="form-group"><label>Email contact</label><input type="email" id="jobEmail"></div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-outline" onclick="this.closest('.modal-overlay').classList.remove('open')">Annuler</button>
+                    <button type="submit" class="btn btn-primary">Ajouter</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: Add Course -->
+    <div class="modal-overlay" id="modalCourse">
+        <div class="modal">
+            <button class="modal-close" onclick="this.closest('.modal-overlay').classList.remove('open')"><i class="fas fa-times"></i></button>
+            <h2>Ajouter une formation</h2>
+            <form id="formCourse">
+                <div class="form-group"><label>Titre *</label><input type="text" id="courseTitle" required></div>
+                <div class="form-row">
+                    <div class="form-group"><label>Niveau</label><select id="courseLevel"><option value="beginner">Débutant</option><option value="intermediate">Intermédiaire</option><option value="advanced">Avancé</option></select></div>
+                    <div class="form-group"><label>Catégorie</label><select id="courseCat"><option value="Réseaux">Réseaux</option><option value="Système">Système</option><option value="Cybersécurité">Cybersécurité</option><option value="Développement">Développement</option><option value="Data">Data</option><option value="Design">Design</option><option value="Gestion">Gestion</option></select></div>
+                </div>
+                <div class="form-group"><label>Description *</label><textarea id="courseDesc" required></textarea></div>
+                <div class="form-group"><label>Durée (heures)</label><input type="number" id="courseDuration"></div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-outline" onclick="this.closest('.modal-overlay').classList.remove('open')">Annuler</button>
+                    <button type="submit" class="btn btn-primary">Ajouter</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: Add Event -->
+    <div class="modal-overlay" id="modalEvent">
+        <div class="modal">
+            <button class="modal-close" onclick="this.closest('.modal-overlay').classList.remove('open')"><i class="fas fa-times"></i></button>
+            <h2>Ajouter un événement</h2>
+            <form id="formEvent">
+                <div class="form-group"><label>Titre *</label><input type="text" id="eventTitle" required></div>
+                <div class="form-row">
+                    <div class="form-group"><label>Type</label><select id="eventType"><option value="meetup">Meetup</option><option value="workshop">Workshop</option><option value="conference">Conférence</option><option value="hackathon">Hackathon</option><option value="webinar">Webinaire</option></select></div>
+                    <div class="form-group"><label>Date *</label><input type="date" id="eventDate" required></div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group"><label>Heure</label><input type="time" id="eventTime" value="18:00"></div>
+                    <div class="form-group"><label>Lieu</label><input type="text" id="eventLocation"></div>
+                </div>
+                <div class="form-group"><label>Description *</label><textarea id="eventDesc" required></textarea></div>
+                <div class="form-group"><label>Places max</label><input type="number" id="eventMax"></div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-outline" onclick="this.closest('.modal-overlay').classList.remove('open')">Annuler</button>
+                    <button type="submit" class="btn btn-primary">Ajouter</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: Add News -->
+    <div class="modal-overlay" id="modalNews">
+        <div class="modal">
+            <button class="modal-close" onclick="this.closest('.modal-overlay').classList.remove('open')"><i class="fas fa-times"></i></button>
+            <h2>Ajouter une actualité</h2>
+            <form id="formNews">
+                <div class="form-group"><label>Titre *</label><input type="text" id="newsTitle" required></div>
+                <div class="form-row">
+                    <div class="form-group"><label>Catégorie</label><select id="newsCat"><option value="tech">Tech</option><option value="community">Communauté</option><option value="event">Événement</option><option value="alert">Alerte</option></select></div>
+                    <div class="form-group"><label>Lien externe</label><input type="url" id="newsLink"></div>
+                </div>
+                <div class="form-group"><label>Contenu *</label><textarea id="newsContent" required></textarea></div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-outline" onclick="this.closest('.modal-overlay').classList.remove('open')">Annuler</button>
+                    <button type="submit" class="btn btn-primary">Ajouter</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: Add User -->
+    <div class="modal-overlay" id="modalUser">
+        <div class="modal">
+            <button class="modal-close" onclick="this.closest('.modal-overlay').classList.remove('open')"><i class="fas fa-times"></i></button>
+            <h2>Ajouter un utilisateur</h2>
+            <p style="font-size:0.85rem; color:var(--text-secondary); margin-bottom:16px;">L'utilisateur recevra un email de confirmation pour activer son compte.</p>
+            <form id="formUser">
+                <div class="form-group"><label>Nom complet *</label><input type="text" id="userName" required></div>
+                <div class="form-group"><label>Email *</label><input type="email" id="userEmail" required></div>
+                <div class="form-group"><label>Mot de passe *</label><input type="password" id="userPassword" required minlength="6"></div>
+                <div class="form-row">
+                    <div class="form-group"><label>Rôle</label><select id="userRole"><option value="member">Membre</option><option value="moderator">Modérateur</option><option value="admin">Admin</option></select></div>
+                    <div class="form-group"><label>Ville</label><input type="text" id="userCity"></div>
+                </div>
+                <div class="form-group"><label>Poste</label><input type="text" id="userJobTitle" placeholder="Ex: DevOps Engineer"></div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-outline" onclick="this.closest('.modal-overlay').classList.remove('open')">Annuler</button>
+                    <button type="submit" class="btn btn-primary">Créer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: Add Post -->
+    <div class="modal-overlay" id="modalPost">
+        <div class="modal">
+            <button class="modal-close" onclick="this.closest('.modal-overlay').classList.remove('open')"><i class="fas fa-times"></i></button>
+            <h2>Créer un post forum</h2>
+            <form id="formPost">
+                <div class="form-group"><label>Titre *</label><input type="text" id="postTitle" required></div>
+                <div class="form-group"><label>Catégorie</label><select id="postCategory"><option value="1">Réseaux & Telecom</option><option value="2">Cybersécurité</option><option value="3">Administration Système</option><option value="4">Développement</option><option value="5">Bases de Données</option><option value="6">Data Science & IA</option><option value="7">UI/UX Design</option><option value="8">Gestion de Projet IT</option><option value="9">Emploi & Carrière</option><option value="10">Général</option></select></div>
+                <div class="form-group"><label>Contenu *</label><textarea id="postContent" required style="min-height:150px;"></textarea></div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-outline" onclick="this.closest('.modal-overlay').classList.remove('open')">Annuler</button>
+                    <button type="submit" class="btn btn-primary">Publier</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <script src="../config.js"></script>
+    <script src="../auth.js"></script>
+    <script src="../db.js"></script>
+    <script src="admin.js"></script>
+</body>
+</html>
