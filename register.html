@@ -275,16 +275,24 @@
             registerBtn.disabled = true;
 
             const { data, error } = await Auth.signUp(email, password, fullName);
-            console.log('Sign up result:', { data, error });
+            console.log('Sign up result:', JSON.stringify({ data, error }));
 
             if (error) {
-                const msg = error.message || JSON.stringify(error) || 'Erreur inconnue';
+                let msg = '';
+                if (error.message) msg = error.message;
+                else if (error.error_description) msg = error.error_description;
+                else if (error.msg) msg = error.msg;
+                else if (typeof error === 'string') msg = error;
+                else msg = 'Erreur: ' + JSON.stringify(error);
+
+                console.log('Error message:', msg);
+
                 if (msg.includes('already registered') || msg.includes('already been registered')) {
                     showError('Cet email est déjà utilisé');
                 } else if (msg.includes('valid email')) {
                     showError('Email invalide');
-                } else if (msg.includes('not initialized')) {
-                    showError('Erreur de configuration — contactez l\'administrateur');
+                } else if (msg.includes('not initialized') || msg.includes('not loaded')) {
+                    showError('Erreur de configuration — rechargez la page');
                 } else {
                     showError(msg);
                 }
