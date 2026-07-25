@@ -275,13 +275,19 @@
             registerBtn.disabled = true;
 
             const { data, error } = await Auth.signUp(email, password, fullName);
+            console.log('Sign up result:', { data, error });
 
             if (error) {
-                showError(
-                    error.message.includes('already registered') ? 'Cet email est déjà utilisé' :
-                    error.message.includes('valid email') ? 'Email invalide' :
-                    error.message
-                );
+                const msg = error.message || JSON.stringify(error) || 'Erreur inconnue';
+                if (msg.includes('already registered') || msg.includes('already been registered')) {
+                    showError('Cet email est déjà utilisé');
+                } else if (msg.includes('valid email')) {
+                    showError('Email invalide');
+                } else if (msg.includes('not initialized')) {
+                    showError('Erreur de configuration — contactez l\'administrateur');
+                } else {
+                    showError(msg);
+                }
                 registerBtn.innerHTML = '<i class="fas fa-user-plus"></i> Créer mon compte';
                 registerBtn.disabled = false;
             } else {
