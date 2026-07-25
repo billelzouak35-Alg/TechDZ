@@ -88,7 +88,7 @@ const Auth = {
     const { error } = await client.auth.signOut();
     if (!error) {
       localStorage.removeItem('techdz-user');
-      window.location.href = '/index.html';
+      window.location.href = 'index.html';
     }
     return { error };
   },
