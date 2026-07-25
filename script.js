@@ -181,24 +181,44 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // Initialize Supabase and listen for auth
-  if (typeof Auth !== 'undefined' && Auth.init()) {
+  function initAuth() {
+    if (typeof Auth === 'undefined') {
+      console.error('Auth module not loaded');
+      showLoggedOut();
+      return;
+    }
+    if (!Auth.init()) {
+      console.error('Auth.init() failed');
+      showLoggedOut();
+      return;
+    }
+
     Auth.onAuthStateChange(async (event, session) => {
+      console.log('Auth event:', event);
       if (session?.user) {
-        const { data: profile } = await Auth.getProfile(session.user.id);
+        const { data: profile, error } = await Auth.getProfile(session.user.id);
+        if (error) console.warn('Profile error:', error);
         showLoggedIn(session.user, profile);
       } else {
         showLoggedOut();
       }
     });
 
-    // Initial check
-    Auth.getUser().then(async ({ user }) => {
+    Auth.getUser().then(async ({ user, error }) => {
+      console.log('Initial user check:', user ? user.email : 'none', error);
       if (user) {
         const { data: profile } = await Auth.getProfile(user.id);
         showLoggedIn(user, profile);
+      } else {
+        showLoggedOut();
       }
+    }).catch(err => {
+      console.error('getUser error:', err);
+      showLoggedOut();
     });
   }
+
+  initAuth();
 
   // ==========================================
   // CTA Registration Form → Supabase
