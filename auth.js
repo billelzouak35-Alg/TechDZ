@@ -40,6 +40,16 @@ const Auth = {
           data: { full_name: fullName }
         }
       });
+
+      if (error) return { data, error };
+
+      if (data?.user) {
+        await client.from('profiles').upsert({
+          id: data.user.id,
+          full_name: fullName || 'Utilisateur'
+        }, { onConflict: 'id' });
+      }
+
       return { data, error };
     } catch (e) {
       return { data: null, error: { message: e.message } };
