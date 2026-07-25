@@ -84,13 +84,18 @@ const Auth = {
 
   // Sign out
   async signOut() {
-    const client = this.getClient();
-    const { error } = await client.auth.signOut();
-    if (!error) {
+    try {
+      const client = this.getClient();
+      const { error } = await client.auth.signOut();
+      localStorage.removeItem('techdz-user');
+      const base = window.location.pathname.includes('/admin/') ? '../' : '';
+      window.location.href = base + 'index.html';
+      return { error };
+    } catch (e) {
       localStorage.removeItem('techdz-user');
       window.location.href = 'index.html';
+      return { error: e };
     }
-    return { error };
   },
 
   // Get current user
