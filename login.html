@@ -247,13 +247,19 @@
             loginBtn.disabled = true;
 
             const { data, error } = await Auth.signIn(email, password);
+            console.log('Sign in result:', { data, error });
 
             if (error) {
-                showError(
-                    error.message.includes('Invalid login') ? 'Email ou mot de passe incorrect' :
-                    error.message.includes('Email not confirmed') ? 'Vérifiez votre boîte mail pour confirmer votre compte' :
-                    error.message
-                );
+                const msg = error.message || JSON.stringify(error) || 'Erreur inconnue';
+                if (msg.includes('Invalid login') || msg.includes('invalid')) {
+                    showError('Email ou mot de passe incorrect');
+                } else if (msg.includes('Email not confirmed')) {
+                    showError('Vérifiez votre boîte mail pour confirmer votre compte');
+                } else if (msg.includes('not initialized')) {
+                    showError('Erreur de configuration — contactez l\'administrateur');
+                } else {
+                    showError(msg);
+                }
                 loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Se connecter';
                 loginBtn.disabled = false;
             } else {
