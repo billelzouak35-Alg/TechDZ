@@ -6,8 +6,12 @@ const Auth = {
   supabase: null,
 
   init() {
-    if (typeof supabase === 'undefined' && !window._supabaseLoaded) {
-      console.warn('Supabase client not loaded yet');
+    if (!window.SUPABASE_URL || !window.SUPABASE_ANON_KEY) {
+      console.error('Supabase config missing: check config.js');
+      return false;
+    }
+    if (!window.supabase) {
+      console.error('Supabase client library not loaded');
       return false;
     }
     this.supabase = window.supabase.createClient(
