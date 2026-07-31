@@ -2,6 +2,82 @@
    TechDZ — Script
    ============================================ */
 
+// ==========================================
+// Language — apply immediately on script load
+// ==========================================
+(function initLang() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const lang = urlParams.get('lang') || localStorage.getItem('techdz-lang');
+  if (!lang) return;
+  localStorage.setItem('techdz-lang', lang);
+  const tr = window.translations;
+  if (!tr) return;
+  const langData = tr[lang];
+  if (!langData) return;
+  const html = document.documentElement;
+  html.setAttribute('lang', lang);
+  if (lang === 'ar') html.setAttribute('dir', 'rtl');
+  else html.removeAttribute('dir');
+  const i18nEls = document.querySelectorAll('[data-i18n]');
+  i18nEls.forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (langData[key]) el.textContent = langData[key];
+  });
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+    const key = el.getAttribute('data-i18n-placeholder');
+    if (langData[key]) el.placeholder = langData[key];
+  });
+})();
+
+function getTranslationUrl(url, lang) {
+  const sep = url.includes('?') ? '&' : '?';
+  return url + sep + 'lang=' + lang;
+}
+
+function updateLinksWithLang() {
+  const lang = localStorage.getItem('techdz-lang');
+  if (!lang) return;
+  document.querySelectorAll('a[href]').forEach(a => {
+    const href = a.getAttribute('href');
+    if (!href) return;
+    if (href.startsWith('#') || href.startsWith('mailto:') || href.startsWith('tel:') || href.startsWith('javascript:')) return;
+    let url;
+    try { url = new URL(a.href); } catch (e) { return; }
+    if (url.protocol !== 'http:' && url.protocol !== 'https:' && url.protocol !== 'file:') return;
+    if (url.hostname !== window.location.hostname) return;
+    url.searchParams.set('lang', lang);
+    a.href = url.toString();
+  });
+}
+updateLinksWithLang();
+
+function setLanguage(lang) {
+  const html = document.documentElement;
+  const tr = window.translations;
+  if (!tr) return;
+  const langData = tr[lang];
+  if (!langData) return;
+  html.setAttribute('lang', lang);
+  if (lang === 'ar') html.setAttribute('dir', 'rtl');
+  else html.removeAttribute('dir');
+  localStorage.setItem('techdz-lang', lang);
+  const i18nEls = document.querySelectorAll('[data-i18n]');
+  i18nEls.forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (langData[key]) el.textContent = langData[key];
+  });
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+    const key = el.getAttribute('data-i18n-placeholder');
+    if (langData[key]) el.placeholder = langData[key];
+  });
+  // Sync URL with lang param
+  const url = new URL(window.location);
+  url.searchParams.set('lang', lang);
+  history.replaceState(null, '', url.toString());
+  // Update all internal links
+  updateLinksWithLang();
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   const html = document.documentElement;
 
@@ -40,14 +116,22 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ==========================================
-  // Language Switcher
+  // Language Switcher UI
   // ==========================================
+  const savedLang = localStorage.getItem('techdz-lang');
+  if (savedLang) {
+    const url = new URL(window.location);
+    url.searchParams.set('lang', savedLang);
+    history.replaceState(null, '', url.toString());
+  }
   const langSwitcher = document.getElementById('langSwitcher');
   const langBtn = document.getElementById('langBtn');
   if (langSwitcher && langBtn) {
     const langOptions = document.querySelectorAll('.lang-option');
-    const savedLang = localStorage.getItem('techdz-lang') || 'fr';
-    setLanguage(savedLang);
+    if (savedLang) {
+      langOptions.forEach(opt => opt.classList.toggle('active', opt.getAttribute('data-lang') === savedLang));
+      langBtn.querySelector('.lang-flag').textContent = savedLang.toUpperCase();
+    }
 
     langBtn.addEventListener('click', (e) => {
       e.stopPropagation();
@@ -56,7 +140,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     langOptions.forEach(option => {
       option.addEventListener('click', () => {
-        setLanguage(option.getAttribute('data-lang'));
+        const lang = option.getAttribute('data-lang');
+        setLanguage(lang);
+        langOptions.forEach(opt => opt.classList.toggle('active', opt.getAttribute('data-lang') === lang));
+        langBtn.querySelector('.lang-flag').textContent = lang.toUpperCase();
         langSwitcher.classList.remove('open');
       });
     });
@@ -64,31 +151,6 @@ document.addEventListener('DOMContentLoaded', () => {
     document.addEventListener('click', (e) => {
       if (!langSwitcher.contains(e.target)) langSwitcher.classList.remove('open');
     });
-
-    function setLanguage(lang) {
-      localStorage.setItem('techdz-lang', lang);
-      langOptions.forEach(opt => opt.classList.toggle('active', opt.getAttribute('data-lang') === lang));
-      langBtn.querySelector('.lang-flag').textContent = lang.toUpperCase();
-
-      if (lang === 'ar') {
-        html.setAttribute('dir', 'rtl');
-        html.setAttribute('lang', 'ar');
-      } else {
-        html.removeAttribute('dir');
-        html.setAttribute('lang', lang);
-      }
-
-      const langData = translations[lang];
-      if (!langData) return;
-      document.querySelectorAll('[data-i18n]').forEach(el => {
-        const key = el.getAttribute('data-i18n');
-        if (langData[key]) el.textContent = langData[key];
-      });
-      document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
-        const key = el.getAttribute('data-i18n-placeholder');
-        if (langData[key]) el.placeholder = langData[key];
-      });
-    }
   }
 
   // ==========================================
@@ -217,6 +279,11 @@ document.addEventListener('DOMContentLoaded', () => {
     Auth.getUser().then(async ({ user, error }) => {
       console.log('Initial user check:', user ? user.email : 'none', error);
       if (user) {
+        if (!Auth.isEmailConfirmed(user)) {
+          // Email non confirmé → déconnexion et retour à la page de connexion
+          await Auth.signOut('login.html');
+          return;
+        }
         const { data: profile } = await Auth.getProfile(user.id);
         showLoggedIn(user, profile);
       } else {

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="fr" data-theme="dark">
 <head>
     <meta charset="UTF-8">
@@ -40,6 +40,7 @@
                 <a href="training.html" class="nav-link" data-i18n="nav.training">Formations</a>
                 <a href="news.html" class="nav-link" data-i18n="nav.news">Actualités</a>
                 <a href="events.html" class="nav-link" data-i18n="nav.events">Événements</a>
+                <a href="networking.html" class="nav-link" data-i18n="nav.networking">Réseautage</a>
             </div>
             <div class="nav-actions">
                 <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
@@ -111,7 +112,9 @@
             <a href="training.html" class="mobile-link" data-i18n="nav.training">Formations</a>
             <a href="news.html" class="mobile-link" data-i18n="nav.news">Actualités</a>
             <a href="events.html" class="mobile-link" data-i18n="nav.events">Événements</a>
+            <a href="networking.html" class="mobile-link" data-i18n="nav.networking">Réseautage</a>
         </div>
+
         <div class="mobile-nav-actions">
             <div id="mobileAuthOut">
                 <a href="login.html" class="btn btn-outline btn-full" data-i18n="nav.login">Se connecter</a>
@@ -461,7 +464,7 @@
                     <h4 data-i18n="footer.community">Communauté</h4>
                     <a href="forum.html" data-i18n="footer.forum">Forum</a>
                     <a href="events.html" data-i18n="footer.events">Événements</a>
-                    <a href="profile.html" data-i18n="footer.members">Membres</a>
+                    <a href="networking.html" data-i18n="footer.members">Membres</a>
                     <a href="#" data-i18n="footer.discord">Discord</a>
                 </div>
                 <div class="footer-col">
@@ -498,6 +501,7 @@
     <script src="auth.js"></script>
     <script src="db.js"></script>
     <script src="script.js"></script>
+    <script src="widgets.js"></script>
     <script>
     (async () => {
         const catColors = { 'Réseaux & Telecom': 'blue', 'Cybersécurité': 'red', 'Administration Système': 'green', 'Développement': 'purple', 'Bases de Données': 'amber', 'Data Science & IA': 'teal', 'UI/UX Design': 'pink', 'Gestion de Projet IT': 'orange', 'Emploi & Carrière': 'cyan', 'Général': 'gray' };
@@ -655,7 +659,7 @@
                 grid.innerHTML = articles.map((n, i) => `
                     <div class="news-card ${i === 0 ? 'featured' : ''}" onclick="window.location.href='news.html'" style="cursor:pointer">
                         <div class="news-content">
-                            <div class="news-category ${i === 0 ? '' : 'small'}">${badgeLabels[n.category] || n.category}</div>
+                            <div class="news-category ${n.category}">${badgeLabels[n.category] || n.category}</div>
                             <h${i === 0 ? '3' : '4'}>${n.title}</h${i === 0 ? '3' : '4'}>
                             <p>${(n.summary || n.content || '').substring(0, 120)}...</p>
                             <div class="news-meta">
@@ -707,3 +711,4 @@
     </script>
 </body>
 </html>
+

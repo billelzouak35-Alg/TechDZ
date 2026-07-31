@@ -341,6 +341,45 @@ const DB = {
   },
 
   // ==========================================
+  // NETWORKING / MEMBERS
+  // ==========================================
+  async getMembers({ search, city, skill, page = 1, limit = 30 } = {}) {
+    const client = this.getClient();
+    let query = client
+      .from('profiles')
+      .select('*', { count: 'exact' })
+      .order('created_at', { ascending: false })
+      .range((page - 1) * limit, page * limit - 1);
+
+    if (search) query = query.or(`full_name.ilike.%${search}%,job_title.ilike.%${search}%`);
+    if (city) query = query.eq('city', city);
+
+    const { data, error, count } = await query;
+    return { data, error, count };
+  },
+
+  async getMemberCities() {
+    const client = this.getClient();
+    const { data, error } = await client
+      .from('profiles')
+      .select('city')
+      .not('city', 'is', null)
+      .order('city');
+    const cities = [...new Set(data?.map(p => p.city).filter(Boolean))];
+    return { data: cities, error };
+  },
+
+  async getMemberSkills() {
+    const client = this.getClient();
+    const { data, error } = await client
+      .from('profiles')
+      .select('skills')
+      .not('skills', 'is', null);
+    const allSkills = [...new Set(data?.flatMap(p => p.skills || []).filter(Boolean))];
+    return { data: allSkills, error };
+  },
+
+  // ==========================================
   // ADMIN STATISTICS
   // ==========================================
   async getUsers() {

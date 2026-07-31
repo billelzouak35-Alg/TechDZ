@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="fr" data-theme="dark">
 <head>
     <meta charset="UTF-8">
@@ -305,6 +305,13 @@
                 }
                 registerBtn.innerHTML = '<i class="fas fa-user-plus"></i> Créer mon compte';
                 registerBtn.disabled = false;
+            } else if (data.user && !Auth.isEmailConfirmed(data.user)) {
+                // Email non confirmé → message clair, pas de redirection immédiate
+                showSuccess('Inscription réussie ! Un email de confirmation a été envoyé à ' + email +
+                    '. Cliquez sur le lien dans l\'email pour activer votre compte.');
+                registerBtn.innerHTML = '<i class="fas fa-check"></i> Email envoyé !';
+                registerBtn.disabled = true;
+                form.querySelectorAll('input').forEach(i => i.disabled = true);
             } else {
                 showSuccess('Compte créé ! Vérifiez votre boîte mail pour confirmer votre inscription.');
                 registerBtn.innerHTML = '<i class="fas fa-check"></i> Compte créé !';
@@ -316,3 +323,4 @@
     </script>
 </body>
 </html>
+

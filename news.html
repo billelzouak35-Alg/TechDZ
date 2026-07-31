@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="fr" data-theme="dark">
 <head>
     <meta charset="UTF-8">
@@ -35,14 +35,7 @@
         }
         .news-card-full:hover { border-color: var(--border-hover); transform: translateY(-2px); box-shadow: var(--shadow-md); }
         .news-card-top { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
-        .news-card-badge {
-            padding: 4px 12px; border-radius: 4px;
-            font-size: 0.7rem; font-weight: 700; text-transform: uppercase;
-        }
-        .news-card-badge.tech { background: rgba(59,130,246,0.12); color: var(--primary); }
-        .news-card-badge.event { background: rgba(16,185,129,0.12); color: var(--secondary); }
-        .news-card-badge.alert { background: rgba(239,68,68,0.12); color: var(--red); }
-        .news-card-badge.community { background: rgba(139,92,246,0.12); color: var(--accent); }
+        .news-card-badge { padding: 4px 12px; border-radius: 4px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; }
         .news-card-date { font-size: 0.78rem; color: var(--text-muted); }
         .news-card-full h3 { font-size: 1.15rem; font-weight: 700; margin-bottom: 8px; line-height: 1.35; }
         .news-card-full p { font-size: 0.9rem; color: var(--text-secondary); line-height: 1.65; margin-bottom: 16px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
@@ -90,15 +83,38 @@
         <div class="container nav-container">
             <a href="index.html" class="nav-logo"><img src="logo.svg" alt="TechDZ" height="32"></a>
             <div class="nav-links">
-                <a href="index.html#features" class="nav-link">Fonctionnalités</a>
-                <a href="forum.html" class="nav-link">Forum</a>
-                <a href="jobs.html" class="nav-link">Emplois</a>
-                <a href="training.html" class="nav-link">Formations</a>
-                <a href="news.html" class="nav-link" style="color:var(--primary)">Actualités</a>
-                <a href="events.html" class="nav-link">Événements</a>
+                <a href="index.html#features" class="nav-link" data-i18n="nav.features">Fonctionnalités</a>
+                <a href="forum.html" class="nav-link" data-i18n="nav.forum">Forum</a>
+                <a href="jobs.html" class="nav-link" data-i18n="nav.jobs">Emplois</a>
+                <a href="training.html" class="nav-link" data-i18n="nav.training">Formations</a>
+                <a href="news.html" class="nav-link" style="color:var(--primary)" data-i18n="nav.news">Actualités</a>
+                <a href="events.html" class="nav-link" data-i18n="nav.events">Événements</a>
+                <a href="networking.html" class="nav-link" data-i18n="nav.networking">Réseautage</a>
             </div>
             <div class="nav-actions">
-                <div id="authLoggedOut"><a href="login.html" class="btn btn-outline btn-sm">Se connecter</a></div>
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <div class="lang-switcher" id="langSwitcher">
+                    <button class="lang-btn" id="langBtn">
+                        <span class="lang-flag">FR</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="lang-dropdown" id="langDropdown">
+                        <button class="lang-option active" data-lang="fr">
+                            <span class="lang-flag">FR</span>
+                            <span>Français</span>
+                        </button>
+                        <button class="lang-option" data-lang="en">
+                            <span class="lang-flag">EN</span>
+                            <span>English</span>
+                        </button>
+                        <button class="lang-option" data-lang="ar">
+                            <span class="lang-flag">AR</span>
+                            <span>العربية</span>
+                        </button>
+                    </div>
+                </div>                <div id="authLoggedOut"><a href="login.html" class="btn btn-outline btn-sm" data-i18n="nav.login">Se connecter</a></div>
                 <div id="authLoggedIn" style="display:none;"><a href="profile.html" class="btn btn-primary btn-sm">Mon profil</a></div>
             </div>
         </div>
@@ -107,39 +123,39 @@
     <div class="news-page">
         <div class="container">
             <div class="news-header">
-                <h1>Actualités <span class="text-gradient">IT</span></h1>
-                <p>Veille technologique, communautaire et événements TechDZ</p>
+                <h1><span data-i18n="news.pageTitle">Actualités</span> <span class="text-gradient">IT</span></h1>
+                <p data-i18n="news.pageSubtitle">Veille technologique, communautaire et événements TechDZ</p>
             </div>
 
             <div class="news-filters">
-                <button class="filter-chip active" data-cat="">Toutes</button>
-                <button class="filter-chip" data-cat="tech">Tech</button>
-                <button class="filter-chip" data-cat="community">Communauté</button>
-                <button class="filter-chip" data-cat="event">Événements</button>
-                <button class="filter-chip" data-cat="alert">Alertes</button>
+                <button class="filter-chip active" data-cat="" data-i18n="news.all">Toutes</button>
+                <button class="filter-chip" data-cat="tech" data-i18n="news.tech">Tech</button>
+                <button class="filter-chip" data-cat="community" data-i18n="news.community">Communauté</button>
+                <button class="filter-chip" data-cat="event" data-i18n="news.event">Événements</button>
+                <button class="filter-chip" data-cat="alert" data-i18n="news.alert">Alertes</button>
             </div>
 
             <div class="news-layout">
                 <div>
                     <div class="news-list" id="newsList">
-                        <div class="loading"><i class="fas fa-spinner fa-spin"></i> Chargement...</div>
+                        <div class="loading"><i class="fas fa-spinner fa-spin"></i> <span data-i18n="news.loading">Chargement...</span></div>
                     </div>
                 </div>
                 <div class="news-sidebar">
                     <div class="sidebar-card">
-                        <h3>Populaire cette semaine</h3>
+                        <h3 data-i18n="news.popular">Populaire cette semaine</h3>
                         <div id="popularNews">
-                            <div style="color:var(--text-muted); font-size:0.85rem;">Chargement...</div>
+                            <div style="color:var(--text-muted); font-size:0.85rem;" data-i18n="news.loading">Chargement...</div>
                         </div>
                     </div>
                     <div class="sidebar-card">
-                        <h3>Statistiques communautaires</h3>
+                        <h3 data-i18n="news.stats">Statistiques communautaires</h3>
                         <div id="communityStats" style="display:flex;flex-direction:column;gap:12px;"></div>
                     </div>
                     <div class="sidebar-card">
-                        <h3>Partager une actu</h3>
-                        <p style="font-size:0.85rem;color:var(--text-secondary);margin-bottom:12px;">Une news IT à partager ?</p>
-                        <button class="btn btn-primary" style="width:100%" id="newNewsBtn"><i class="fas fa-plus"></i> Proposer un article</button>
+                        <h3 data-i18n="news.share">Partager une actu</h3>
+                        <p style="font-size:0.85rem;color:var(--text-secondary);margin-bottom:12px;" data-i18n="news.shareText">Une news IT à partager ?</p>
+                        <button class="btn btn-primary" style="width:100%" id="newNewsBtn"><i class="fas fa-plus"></i> <span data-i18n="news.proposeArticle">Proposer un article</span></button>
                     </div>
                 </div>
             </div>
@@ -149,34 +165,34 @@
     <div class="modal-overlay" id="newsModal">
         <div class="modal">
             <button class="modal-close" onclick="this.closest('.modal-overlay').classList.remove('open')"><i class="fas fa-times"></i></button>
-            <h2>Partager une actualité</h2>
+            <h2 data-i18n="news.modalTitle">Partager une actualité</h2>
             <form id="newsForm">
                 <div class="form-group">
-                    <label>Titre *</label>
-                    <input type="text" id="newsTitle" placeholder="Ex: Conférence AI à Alger" required>
+                    <label data-i18n="news.titleLabel">Titre *</label>
+                    <input type="text" id="newsTitle" placeholder="Ex: Conférence AI à Alger" required data-i18n-placeholder="news.titlePlaceholder">
                 </div>
                 <div class="form-row">
                     <div class="form-group">
-                        <label>Catégorie</label>
+                        <label data-i18n="news.category">Catégorie</label>
                         <select id="newsCat">
-                            <option value="tech">Tech</option>
-                            <option value="community">Communauté</option>
-                            <option value="event">Événement</option>
-                            <option value="alert">Alerte</option>
+                            <option value="tech" data-i18n="news.tech">Tech</option>
+                            <option value="community" data-i18n="news.community">Communauté</option>
+                            <option value="event" data-i18n="news.event">Événement</option>
+                            <option value="alert" data-i18n="news.alert">Alerte</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label>Lien (optionnel)</label>
+                        <label data-i18n="news.linkLabel">Lien (optionnel)</label>
                         <input type="url" id="newsLink" placeholder="https://...">
                     </div>
                 </div>
                 <div class="form-group">
-                    <label>Contenu *</label>
-                    <textarea id="newsContent" placeholder="Décrivez l'actualité..." required></textarea>
+                    <label data-i18n="news.contentLabel">Contenu *</label>
+                    <textarea id="newsContent" placeholder="Décrivez l'actualité..." required data-i18n-placeholder="news.contentPlaceholder"></textarea>
                 </div>
                 <div class="modal-actions">
-                    <button type="button" class="btn btn-outline" onclick="this.closest('.modal-overlay').classList.remove('open')">Annuler</button>
-                    <button type="submit" class="btn btn-primary" id="submitNewsBtn"><i class="fas fa-paper-plane"></i> Publier</button>
+                    <button type="button" class="btn btn-outline" onclick="this.closest('.modal-overlay').classList.remove('open')"><span data-i18n="common.cancel">Annuler</span></button>
+                    <button type="submit" class="btn btn-primary" id="submitNewsBtn"><i class="fas fa-paper-plane"></i> <span data-i18n="news.publish">Publier</span></button>
                 </div>
             </form>
         </div>
@@ -188,11 +204,16 @@
     <script src="auth.js"></script>
     <script src="db.js"></script>
     <script src="script.js"></script>
+    <script src="widgets.js"></script>
     <script>
         (async () => {
             Auth.init();
             let currentUser = null;
             const { user } = await Auth.getUser();
+            if (user && !Auth.isEmailConfirmed(user)) {
+                await Auth.signOut('login.html');
+                return;
+            }
             if (user) {
                 currentUser = user;
                 document.getElementById('authLoggedOut').style.display = 'none';
@@ -221,7 +242,7 @@
                 list.innerHTML = data.map(n => `
                     <div class="news-card-full">
                         <div class="news-card-top">
-                            <span class="news-card-badge ${n.category}">${badgeLabels[n.category] || n.category}</span>
+                            <span class="news-category ${n.category}">${badgeLabels[n.category] || n.category}</span>
                             <span class="news-card-date">${new Date(n.created_at).toLocaleDateString('fr-FR', { day:'numeric', month:'long', year:'numeric' })}</span>
                         </div>
                         <h3>${n.title}</h3>
@@ -305,3 +326,5 @@
     </script>
 </body>
 </html>
+
+

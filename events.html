@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="fr" data-theme="dark">
 <head>
     <meta charset="UTF-8">
@@ -113,15 +113,38 @@
         <div class="container nav-container">
             <a href="index.html" class="nav-logo"><img src="logo.svg" alt="TechDZ" height="32"></a>
             <div class="nav-links">
-                <a href="index.html#features" class="nav-link">Fonctionnalités</a>
-                <a href="forum.html" class="nav-link">Forum</a>
-                <a href="jobs.html" class="nav-link">Emplois</a>
-                <a href="training.html" class="nav-link">Formations</a>
-                <a href="news.html" class="nav-link">Actualités</a>
-                <a href="events.html" class="nav-link" style="color:var(--primary)">Événements</a>
+                <a href="index.html#features" class="nav-link" data-i18n="nav.features">Fonctionnalités</a>
+                <a href="forum.html" class="nav-link" data-i18n="nav.forum">Forum</a>
+                <a href="jobs.html" class="nav-link" data-i18n="nav.jobs">Emplois</a>
+                <a href="training.html" class="nav-link" data-i18n="nav.training">Formations</a>
+                <a href="news.html" class="nav-link" data-i18n="nav.news">Actualités</a>
+                <a href="events.html" class="nav-link" style="color:var(--primary)" data-i18n="nav.events">Événements</a>
+                <a href="networking.html" class="nav-link" data-i18n="nav.networking">Réseautage</a>
             </div>
             <div class="nav-actions">
-                <div id="authLoggedOut"><a href="login.html" class="btn btn-outline btn-sm">Se connecter</a></div>
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <div class="lang-switcher" id="langSwitcher">
+                    <button class="lang-btn" id="langBtn">
+                        <span class="lang-flag">FR</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="lang-dropdown" id="langDropdown">
+                        <button class="lang-option active" data-lang="fr">
+                            <span class="lang-flag">FR</span>
+                            <span>Français</span>
+                        </button>
+                        <button class="lang-option" data-lang="en">
+                            <span class="lang-flag">EN</span>
+                            <span>English</span>
+                        </button>
+                        <button class="lang-option" data-lang="ar">
+                            <span class="lang-flag">AR</span>
+                            <span>العربية</span>
+                        </button>
+                    </div>
+                </div>                <div id="authLoggedOut"><a href="login.html" class="btn btn-outline btn-sm" data-i18n="nav.login">Se connecter</a></div>
                 <div id="authLoggedIn" style="display:none;"><a href="profile.html" class="btn btn-primary btn-sm">Mon profil</a></div>
             </div>
         </div>
@@ -130,24 +153,24 @@
     <div class="events-page">
         <div class="container">
             <div class="events-header">
-                <h1>Événements <span class="text-gradient">TechDZ</span></h1>
-                <p>Meetups, workshops, hackathons et conférences IT en Algérie</p>
+                <h1><span data-i18n="events.badge">Événements</span> <span class="text-gradient">TechDZ</span></h1>
+                <p data-i18n="events.desc">Meetups, workshops, hackathons et conférences IT en Algérie</p>
             </div>
 
             <div class="events-layout">
                 <div id="eventsList">
-                    <div class="loading"><i class="fas fa-spinner fa-spin"></i> Chargement des événements...</div>
+                    <div class="loading"><i class="fas fa-spinner fa-spin"></i> <span data-i18n="events.loading">Chargement des événements...</span></div>
                 </div>
 
                 <div class="events-sidebar">
                     <div class="sidebar-card">
-                        <h3>À venir</h3>
-                        <div id="upcomingEvents"><div style="font-size:0.85rem;color:var(--text-muted)">Chargement...</div></div>
+                        <h3 data-i18n="events.upcoming">À venir</h3>
+                        <div id="upcomingEvents"><div style="font-size:0.85rem;color:var(--text-muted)" data-i18n="events.loading">Chargement...</div></div>
                     </div>
                     <div class="sidebar-card">
-                        <h3>Proposer un événement</h3>
-                        <p style="font-size:0.85rem;color:var(--text-secondary);margin-bottom:12px;">Organisez un meetup ou workshop TechDZ ?</p>
-                        <button class="btn btn-primary" style="width:100%" id="newEventBtn"><i class="fas fa-plus"></i> Créer un événement</button>
+                        <h3 data-i18n="events.propose">Proposer un événement</h3>
+                        <p style="font-size:0.85rem;color:var(--text-secondary);margin-bottom:12px;" data-i18n="events.proposeText">Organisez un meetup ou workshop TechDZ ?</p>
+                        <button class="btn btn-primary" style="width:100%" id="newEventBtn"><i class="fas fa-plus"></i> <span data-i18n="events.create">Créer un événement</span></button>
                     </div>
                 </div>
             </div>
@@ -157,49 +180,49 @@
     <div class="modal-overlay" id="eventModal">
         <div class="modal">
             <button class="modal-close" onclick="this.closest('.modal-overlay').classList.remove('open')"><i class="fas fa-times"></i></button>
-            <h2>Proposer un événement</h2>
+            <h2 data-i18n="events.modalTitle">Proposer un événement</h2>
             <form id="eventForm">
                 <div class="form-group">
-                    <label>Titre *</label>
-                    <input type="text" id="eventTitle" placeholder="Ex: Meetup Cloud Algeria" required>
+                    <label data-i18n="events.titleLabel">Titre *</label>
+                    <input type="text" id="eventTitle" placeholder="Ex: Meetup Cloud Algeria" required data-i18n-placeholder="events.titlePlaceholder">
                 </div>
                 <div class="form-row">
                     <div class="form-group">
-                        <label>Type</label>
+                        <label data-i18n="events.typeLabel">Type</label>
                         <select id="eventType">
-                            <option value="meetup">Meetup</option>
-                            <option value="workshop">Workshop</option>
-                            <option value="conference">Conférence</option>
-                            <option value="hackathon">Hackathon</option>
-                            <option value="webinar">Webinaire</option>
+                            <option value="meetup" data-i18n="events.typeMeetup">Meetup</option>
+                            <option value="workshop" data-i18n="events.typeWorkshop">Workshop</option>
+                            <option value="conference" data-i18n="events.typeConference">Conférence</option>
+                            <option value="hackathon" data-i18n="events.typeHackathon">Hackathon</option>
+                            <option value="webinar" data-i18n="events.typeWebinar">Webinaire</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label>Date *</label>
+                        <label data-i18n="events.dateLabel">Date *</label>
                         <input type="date" id="eventDate" required>
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="form-group">
-                        <label>Heure</label>
+                        <label data-i18n="events.timeLabel">Heure</label>
                         <input type="time" id="eventTime" value="18:00">
                     </div>
                     <div class="form-group">
-                        <label>Lieu</label>
-                        <input type="text" id="eventLocation" placeholder="Ex: Algiers, CITUB">
+                        <label data-i18n="events.locationLabel">Lieu</label>
+                        <input type="text" id="eventLocation" placeholder="Ex: Algiers, CITUB" data-i18n-placeholder="events.locationPlaceholder">
                     </div>
                 </div>
                 <div class="form-group">
-                    <label>Description *</label>
-                    <textarea id="eventDesc" placeholder="Décrivez l'événement..." required></textarea>
+                    <label data-i18n="events.descLabel">Description *</label>
+                    <textarea id="eventDesc" placeholder="Décrivez l'événement..." required data-i18n-placeholder="events.descPlaceholder"></textarea>
                 </div>
                 <div class="form-group">
-                    <label>Places max (optionnel)</label>
+                    <label data-i18n="events.maxLabel">Places max (optionnel)</label>
                     <input type="number" id="eventMax" placeholder="50">
                 </div>
                 <div class="modal-actions">
-                    <button type="button" class="btn btn-outline" onclick="this.closest('.modal-overlay').classList.remove('open')">Annuler</button>
-                    <button type="submit" class="btn btn-primary" id="submitEventBtn"><i class="fas fa-calendar-plus"></i> Créer</button>
+                    <button type="button" class="btn btn-outline" onclick="this.closest('.modal-overlay').classList.remove('open')"><span data-i18n="common.cancel">Annuler</span></button>
+                    <button type="submit" class="btn btn-primary" id="submitEventBtn"><i class="fas fa-calendar-plus"></i> <span data-i18n="events.submit">Créer</span></button>
                 </div>
             </form>
         </div>
@@ -211,11 +234,16 @@
     <script src="auth.js"></script>
     <script src="db.js"></script>
     <script src="script.js"></script>
+    <script src="widgets.js"></script>
     <script>
         (async () => {
             Auth.init();
             let currentUser = null;
             const { user } = await Auth.getUser();
+            if (user && !Auth.isEmailConfirmed(user)) {
+                await Auth.signOut('login.html');
+                return;
+            }
             if (user) {
                 currentUser = user;
                 document.getElementById('authLoggedOut').style.display = 'none';
@@ -346,3 +374,4 @@
     </script>
 </body>
 </html>
+

@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirmation — TechDZ</title>
+    <link rel="icon" type="image/svg+xml" href="logo.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Kufi+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .auth-page {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            position: relative;
+        }
+        .auth-bg {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+        }
+        .auth-bg::before {
+            content: '';
+            position: absolute;
+            top: -30%;
+            right: -10%;
+            width: 60%;
+            height: 60%;
+            background: radial-gradient(circle, rgba(16, 185, 129, 0.1) 0%, transparent 70%);
+            filter: blur(60px);
+        }
+        .auth-card {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 480px;
+            padding: 48px 40px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-lg);
+        }
+        .auth-logo {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+        .auth-logo img { height: 36px; }
+        .auth-logo h1 {
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin-top: 12px;
+        }
+        .auth-logo p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-top: 4px;
+        }
+        .alert {
+            padding: 12px 16px;
+            border-radius: var(--radius-md);
+            font-size: 0.9rem;
+            display: none;
+            line-height: 1.6;
+        }
+        .alert.error {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            color: var(--red);
+        }
+        .alert.error a { color: var(--red); font-weight: 700; text-decoration: underline; }
+        .alert.success {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            color: var(--secondary);
+        }
+        .alert.success .check-icon {
+            display: block;
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 12px;
+            color: var(--secondary);
+        }
+        .alert.success a { color: var(--secondary); font-weight: 700; text-decoration: underline; }
+        .loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            padding: 12px;
+        }
+        .auth-footer {
+            text-align: center;
+            margin-top: 24px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+        .auth-footer a {
+            color: var(--primary);
+            font-weight: 600;
+        }
+        .auth-footer a:hover { text-decoration: underline; }
+        .back-link {
+            position: absolute;
+            top: 24px;
+            left: 24px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            font-weight: 500;
+            z-index: 2;
+        }
+        .back-link:hover { color: var(--primary); }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="back-link">
+        <i class="fas fa-arrow-left"></i> Retour
+    </a>
+
+    <div class="auth-page">
+        <div class="auth-bg"></div>
+        <div class="auth-card">
+            <div class="auth-logo">
+                <img src="logo.svg" alt="TechDZ">
+                <h1>Confirmation de compte</h1>
+                <p>Activation de votre compte TechDZ</p>
+            </div>
+
+            <div id="statusBox">
+                <div class="alert" id="alertMessage"></div>
+                <div class="loading" id="loadingBox">
+                    <i class="fas fa-spinner fa-spin"></i> Vérification de votre email...
+                </div>
+            </div>
+
+            <div class="auth-footer" id="authFooter" style="display:none">
+                <a href="login.html"><i class="fas fa-sign-in-alt"></i> Aller à la connexion</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <script src="config.js"></script>
+    <script src="auth.js"></script>
+    <script>
+        Auth.init();
+
+        const alertMessage = document.getElementById('alertMessage');
+        const loadingBox = document.getElementById('loadingBox');
+        const authFooter = document.getElementById('authFooter');
+
+        function showSuccess(msg) {
+            loadingBox.style.display = 'none';
+            alertMessage.className = 'alert success';
+            alertMessage.innerHTML =
+                '<i class="fas fa-check-circle check-icon"></i>' +
+                msg;
+            alertMessage.style.display = 'block';
+        }
+
+        function showError(msg) {
+            loadingBox.style.display = 'none';
+            alertMessage.className = 'alert error';
+            alertMessage.innerHTML = msg + ' <a href="login.html">Retour à la connexion</a>';
+            alertMessage.style.display = 'block';
+            authFooter.style.display = 'block';
+        }
+
+        async function handleConfirmed(session) {
+            const user = session.user;
+
+            // Créer le profil s'il n'existe pas encore (créé au moment de la confirmation)
+            const { data: profile } = await Auth.getProfile(user.id);
+            if (!profile) {
+                await Auth.getClient().from('profiles').upsert({
+                    id: user.id,
+                    full_name: (user.user_metadata && user.user_metadata.full_name) || 'Utilisateur'
+                }, { onConflict: 'id' });
+            }
+
+            localStorage.setItem('techdz-user', JSON.stringify(user));
+            showSuccess('Email confirmé avec succès !<br>Bienvenue sur TechDZ. Redirection...');
+            setTimeout(() => {
+                window.location.href = 'index.html';
+            }, 2000);
+        }
+
+        (async () => {
+            // 1) Flow PKCE : échange du code de confirmation s'il est présent dans l'URL
+            const code = new URLSearchParams(window.location.search).get('code');
+            if (code) {
+                const { data, error } = await Auth.getClient().auth.exchangeCodeForSession(code);
+                if (error) {
+                    showError('Le lien de confirmation est invalide ou a expiré.');
+                    return;
+                }
+                handleConfirmed(data.session);
+                return;
+            }
+
+            // 2) Flow implicite : session déjà disponible (jetons dans le hash de l'URL)
+            const { session } = await Auth.getSession();
+            if (session) {
+                handleConfirmed(session);
+                return;
+            }
+
+            // 3) Attente courte au cas où le hash est encore en cours de traitement
+            setTimeout(async () => {
+                const s = (await Auth.getSession()).session;
+                if (s) handleConfirmed(s);
+                else showError('Le lien de confirmation est invalide ou a expiré.');
+            }, 1500);
+        })();
+    </script>
+</body>
+</html>

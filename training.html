@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="fr" data-theme="dark">
 <head>
     <meta charset="UTF-8">
@@ -124,15 +124,38 @@
         <div class="container nav-container">
             <a href="index.html" class="nav-logo"><img src="logo.svg" alt="TechDZ" height="32"></a>
             <div class="nav-links">
-                <a href="index.html#features" class="nav-link">Fonctionnalités</a>
-                <a href="forum.html" class="nav-link">Forum</a>
-                <a href="jobs.html" class="nav-link">Emplois</a>
-                <a href="training.html" class="nav-link" style="color:var(--primary)">Formations</a>
-                <a href="news.html" class="nav-link">Actualités</a>
-                <a href="events.html" class="nav-link">Événements</a>
+                <a href="index.html#features" class="nav-link" data-i18n="nav.features">Fonctionnalités</a>
+                <a href="forum.html" class="nav-link" data-i18n="nav.forum">Forum</a>
+                <a href="jobs.html" class="nav-link" data-i18n="nav.jobs">Emplois</a>
+                <a href="training.html" class="nav-link" style="color:var(--primary)" data-i18n="nav.training">Formations</a>
+                <a href="news.html" class="nav-link" data-i18n="nav.news">Actualités</a>
+                <a href="events.html" class="nav-link" data-i18n="nav.events">Événements</a>
+                <a href="networking.html" class="nav-link" data-i18n="nav.networking">Réseautage</a>
             </div>
             <div class="nav-actions">
-                <div id="authLoggedOut"><a href="login.html" class="btn btn-outline btn-sm">Se connecter</a></div>
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <div class="lang-switcher" id="langSwitcher">
+                    <button class="lang-btn" id="langBtn">
+                        <span class="lang-flag">FR</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="lang-dropdown" id="langDropdown">
+                        <button class="lang-option active" data-lang="fr">
+                            <span class="lang-flag">FR</span>
+                            <span>Français</span>
+                        </button>
+                        <button class="lang-option" data-lang="en">
+                            <span class="lang-flag">EN</span>
+                            <span>English</span>
+                        </button>
+                        <button class="lang-option" data-lang="ar">
+                            <span class="lang-flag">AR</span>
+                            <span>العربية</span>
+                        </button>
+                    </div>
+                </div>                <div id="authLoggedOut"><a href="login.html" class="btn btn-outline btn-sm" data-i18n="nav.login">Se connecter</a></div>
                 <div id="authLoggedIn" style="display:none;"><a href="profile.html" class="btn btn-primary btn-sm">Mon profil</a></div>
             </div>
         </div>
@@ -141,23 +164,23 @@
     <div class="training-page">
         <div class="container">
             <div class="training-header">
-                <h1>Formations <span class="text-gradient">gratuites</span></h1>
-                <p>Cours, tutoriels et certifications pour tous les informaticiens</p>
+                <h1><span data-i18n="training.pageTitle">Formations</span> <span class="text-gradient" data-i18n="training.free">gratuites</span></h1>
+                <p data-i18n="training.pageSubtitle">Cours, tutoriels et certifications pour tous les informaticiens</p>
             </div>
 
             <div class="training-filters">
-                <button class="filter-chip active" data-level="">Tous</button>
-                <button class="filter-chip" data-level="beginner">Débutant</button>
-                <button class="filter-chip" data-level="intermediate">Intermédiaire</button>
-                <button class="filter-chip" data-level="advanced">Avancé</button>
+                <button class="filter-chip active" data-level="" data-i18n="training.all">Tous</button>
+                <button class="filter-chip" data-level="beginner" data-i18n="training.beginner">Débutant</button>
+                <button class="filter-chip" data-level="intermediate" data-i18n="training.intermediate">Intermédiaire</button>
+                <button class="filter-chip" data-level="advanced" data-i18n="training.advanced">Avancé</button>
             </div>
 
             <div class="courses-grid" id="coursesGrid">
-                <div class="loading"><i class="fas fa-spinner fa-spin"></i> Chargement des formations...</div>
+                <div class="loading"><i class="fas fa-spinner fa-spin"></i> <span data-i18n="training.loading">Chargement des formations...</span></div>
             </div>
 
             <div style="text-align:center; margin-top:40px;">
-                <button class="new-job-btn" id="newCourseBtn"><i class="fas fa-plus"></i> Proposer une formation</button>
+                <button class="new-job-btn" id="newCourseBtn"><i class="fas fa-plus"></i> <span data-i18n="training.propose">Proposer une formation</span></button>
             </div>
         </div>
     </div>
@@ -166,47 +189,47 @@
     <div class="modal-overlay" id="courseModal">
         <div class="modal">
             <button class="modal-close" id="closeModal"><i class="fas fa-times"></i></button>
-            <h2>Proposer une formation</h2>
+            <h2 data-i18n="training.modalTitle">Proposer une formation</h2>
             <form id="courseForm">
                 <div class="form-group">
-                    <label>Titre *</label>
-                    <input type="text" id="courseTitle" placeholder="Ex: Réseaux & Cisco CCNA" required>
+                    <label data-i18n="training.titleLabel">Titre *</label>
+                    <input type="text" id="courseTitle" placeholder="Ex: Réseaux & Cisco CCNA" required data-i18n-placeholder="training.titlePlaceholder">
                 </div>
                 <div class="form-row">
                     <div class="form-group">
-                        <label>Niveau</label>
+                        <label data-i18n="training.levelLabel">Niveau</label>
                         <select id="courseLevel">
-                            <option value="beginner">Débutant</option>
-                            <option value="intermediate">Intermédiaire</option>
-                            <option value="advanced">Avancé</option>
+                            <option value="beginner" data-i18n="training.beginner">Débutant</option>
+                            <option value="intermediate" data-i18n="training.intermediate">Intermédiaire</option>
+                            <option value="advanced" data-i18n="training.advanced">Avancé</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label>Catégorie</label>
+                        <label data-i18n="training.categoryLabel">Catégorie</label>
                         <select id="courseCategory">
-                            <option value="Réseaux">Réseaux</option>
-                            <option value="Système">Système</option>
-                            <option value="Cybersécurité">Cybersécurité</option>
-                            <option value="Développement">Développement</option>
-                            <option value="Data">Data Science</option>
-                            <option value="Design">Design</option>
-                            <option value="Gestion">Gestion de projet</option>
+                            <option value="Réseaux" data-i18n="training.catNetwork">Réseaux</option>
+                            <option value="Système" data-i18n="training.catSys">Système</option>
+                            <option value="Cybersécurité" data-i18n="training.catSec">Cybersécurité</option>
+                            <option value="Développement" data-i18n="training.catDev">Développement</option>
+                            <option value="Data" data-i18n="training.catData">Data Science</option>
+                            <option value="Design" data-i18n="training.catDesign">Design</option>
+                            <option value="Gestion" data-i18n="training.catProj">Gestion de projet</option>
                         </select>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label> Description *</label>
-                    <textarea id="courseDesc" placeholder="Décrivez le contenu de la formation..." required></textarea>
+                    <label data-i18n="training.descLabel"> Description *</label>
+                    <textarea id="courseDesc" placeholder="Décrivez le contenu de la formation..." required data-i18n-placeholder="training.descPlaceholder"></textarea>
                 </div>
                 <div class="form-row">
                     <div class="form-group">
-                        <label>Durée (heures)</label>
+                        <label data-i18n="training.durationLabel">Durée (heures)</label>
                         <input type="number" id="courseDuration" placeholder="24">
                     </div>
                 </div>
                 <div class="modal-actions">
-                    <button type="button" class="btn btn-outline" id="cancelModal">Annuler</button>
-                    <button type="submit" class="btn btn-primary" id="submitBtn"><i class="fas fa-graduation-cap"></i> Proposer</button>
+                    <button type="button" class="btn btn-outline" id="cancelModal"><span data-i18n="common.cancel">Annuler</span></button>
+                    <button type="submit" class="btn btn-primary" id="submitBtn"><i class="fas fa-graduation-cap"></i> <span data-i18n="training.submit">Proposer</span></button>
                 </div>
             </form>
         </div>
@@ -218,11 +241,16 @@
     <script src="auth.js"></script>
     <script src="db.js"></script>
     <script src="script.js"></script>
+    <script src="widgets.js"></script>
     <script>
         (async () => {
             Auth.init();
             let currentUser = null;
             const { user } = await Auth.getUser();
+            if (user && !Auth.isEmailConfirmed(user)) {
+                await Auth.signOut('login.html');
+                return;
+            }
             if (user) {
                 currentUser = user;
                 document.getElementById('authLoggedOut').style.display = 'none';
@@ -337,3 +365,5 @@
     </script>
 </body>
 </html>
+
+

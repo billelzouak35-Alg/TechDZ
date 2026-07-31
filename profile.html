@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="fr" data-theme="dark">
 <head>
     <meta charset="UTF-8">
@@ -324,15 +324,39 @@
                 <img src="logo.svg" alt="TechDZ" height="32">
             </a>
             <div class="nav-links">
-                <a href="index.html#features" class="nav-link">Fonctionnalités</a>
-                <a href="forum.html" class="nav-link">Forum</a>
-                <a href="jobs.html" class="nav-link">Emplois</a>
-                <a href="training.html" class="nav-link">Formations</a>
-                <a href="news.html" class="nav-link">Actualités</a>
-                <a href="events.html" class="nav-link">Événements</a>
+<a href="index.html#features" class="nav-link" data-i18n="nav.features">Fonctionnalités</a>
+                <a href="forum.html" class="nav-link" data-i18n="nav.forum">Forum</a>
+                <a href="jobs.html" class="nav-link" data-i18n="nav.jobs">Emplois</a>
+                <a href="training.html" class="nav-link" data-i18n="nav.training">Formations</a>
+                <a href="news.html" class="nav-link" data-i18n="nav.news">Actualités</a>
+                <a href="events.html" class="nav-link" data-i18n="nav.events">Événements</a>
+                <a href="networking.html" class="nav-link" data-i18n="nav.networking">Réseautage</a>
             </div>
             <div class="nav-actions">
-                <a href="index.html" class="btn btn-outline btn-sm">Retour au site</a>
+                            <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                <i class="fas fa-moon"></i>
+            </button>
+            <div class="lang-switcher" id="langSwitcher">
+                <button class="lang-btn" id="langBtn">
+                    <span class="lang-flag">FR</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="lang-dropdown" id="langDropdown">
+                    <button class="lang-option active" data-lang="fr">
+                        <span class="lang-flag">FR</span>
+                        <span>Français</span>
+                    </button>
+                    <button class="lang-option" data-lang="en">
+                        <span class="lang-flag">EN</span>
+                        <span>English</span>
+                    </button>
+                    <button class="lang-option" data-lang="ar">
+                        <span class="lang-flag">AR</span>
+                        <span>العربية</span>
+                    </button>
+                </div>
+            </div>
+                <a href="index.html" class="btn btn-outline btn-sm" data-i18n="profile.backToSite">Retour au site</a>
             </div>
         </div>
     </nav>
@@ -348,21 +372,21 @@
                     <input type="file" id="avatarUpload" accept="image/*" style="display:none;">
                 </div>
                 <div class="profile-info">
-                    <h1 class="profile-name" id="profileName">Chargement...</h1>
+                    <h1 class="profile-name" id="profileName" data-i18n="profile.loading">Chargement...</h1>
                     <p class="profile-job" id="profileJob">—</p>
                     <div class="profile-meta">
                         <span><i class="fas fa-map-marker-alt"></i> <span id="profileCity">—</span></span>
-                        <span><i class="fas fa-calendar"></i> Inscrit le <span id="profileDate">—</span></span>
+                        <span><i class="fas fa-calendar"></i> <span data-i18n="profile.registered">Inscrit le</span> <span id="profileDate">—</span></span>
                     </div>
-                    <span class="profile-role-badge member" id="profileRole">Membre</span>
+                    <span class="profile-role-badge member" id="profileRole" data-i18n="profile.member">Membre</span>
                     <div class="profile-stats-row">
                         <div class="profile-stat">
                             <div class="profile-stat-num" id="statPosts">0</div>
-                            <div class="profile-stat-label">Posts</div>
+                            <div class="profile-stat-label" data-i18n="profile.posts">Posts</div>
                         </div>
                         <div class="profile-stat">
                             <div class="profile-stat-num" id="statReplies">0</div>
-                            <div class="profile-stat-label">Réponses</div>
+                            <div class="profile-stat-label" data-i18n="profile.replies">Réponses</div>
                         </div>
                     </div>
                 </div>
@@ -370,61 +394,61 @@
 
             <!-- Tabs -->
             <div class="profile-tabs">
-                <button class="profile-tab active" data-tab="edit"><i class="fas fa-edit"></i> Modifier</button>
-                <button class="profile-tab" data-tab="activity"><i class="fas fa-clock"></i> Activité</button>
-                <button class="profile-tab" data-tab="settings"><i class="fas fa-cog"></i> Paramètres</button>
+                <button class="profile-tab active" data-tab="edit"><i class="fas fa-edit"></i> <span data-i18n="profile.editTab">Modifier</span></button>
+                <button class="profile-tab" data-tab="activity"><i class="fas fa-clock"></i> <span data-i18n="profile.activityTab">Activité</span></button>
+                <button class="profile-tab" data-tab="settings"><i class="fas fa-cog"></i> <span data-i18n="profile.settingsTab">Paramètres</span></button>
             </div>
 
             <!-- Edit Tab -->
             <div class="tab-content active" id="tab-edit">
                 <div class="edit-card">
-                    <h2>Modifier mon profil</h2>
+                    <h2 data-i18n="profile.editTitle">Modifier mon profil</h2>
                     <div class="alert-bar" id="editAlert"></div>
                     <form id="editForm">
                         <div class="form-row">
                             <div class="form-group">
-                                <label for="editName">Nom complet</label>
-                                <input type="text" id="editName" placeholder="Mohamed Benali">
+                                <label for="editName" data-i18n="profile.nameLabel">Nom complet</label>
+                                <input type="text" id="editName" placeholder="Mohamed Benali" data-i18n-placeholder="profile.namePlaceholder">
                             </div>
                             <div class="form-group">
-                                <label for="editJob">Titre professionnel</label>
-                                <input type="text" id="editJob" placeholder="Ingénieur Réseau">
+                                <label for="editJob" data-i18n="profile.jobLabel">Titre professionnel</label>
+                                <input type="text" id="editJob" placeholder="Ingénieur Réseau" data-i18n-placeholder="profile.jobPlaceholder">
                             </div>
                         </div>
                         <div class="form-row">
                             <div class="form-group">
-                                <label for="editCity">Ville</label>
-                                <input type="text" id="editCity" placeholder="Alger">
+                                <label for="editCity" data-i18n="profile.cityLabel">Ville</label>
+                                <input type="text" id="editCity" placeholder="Alger" data-i18n-placeholder="profile.cityPlaceholder">
                             </div>
                             <div class="form-group">
-                                <label for="editWebsite">Site web</label>
+                                <label for="editWebsite" data-i18n="profile.websiteLabel">Site web</label>
                                 <input type="url" id="editWebsite" placeholder="https://...">
                             </div>
                         </div>
                         <div class="form-row">
                             <div class="form-group">
-                                <label for="editLinkedIn">LinkedIn</label>
+                                <label for="editLinkedIn" data-i18n="profile.linkedinLabel">LinkedIn</label>
                                 <input type="url" id="editLinkedIn" placeholder="https://linkedin.com/in/...">
                             </div>
                             <div class="form-group">
-                                <label for="editGithub">GitHub</label>
+                                <label for="editGithub" data-i18n="profile.githubLabel">GitHub</label>
                                 <input type="url" id="editGithub" placeholder="https://github.com/...">
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="editBio">Bio</label>
-                            <textarea id="editBio" placeholder="Parlez-nous de vous..."></textarea>
+                            <label for="editBio" data-i18n="profile.bioLabel">Bio</label>
+                            <textarea id="editBio" placeholder="Parlez-nous de vous..." data-i18n-placeholder="profile.bioPlaceholder"></textarea>
                         </div>
                         <div class="form-group">
-                            <label>Compétences</label>
+                            <label data-i18n="profile.skillsLabel">Compétences</label>
                             <div class="skills-input-wrapper" id="skillsWrapper">
-                                <input type="text" class="skills-input" id="skillsInput" placeholder="Tapez et appuyez sur Entrée...">
+                                <input type="text" class="skills-input" id="skillsInput" placeholder="Tapez et appuyez sur Entrée..." data-i18n-placeholder="profile.skillsPlaceholder">
                             </div>
                         </div>
                         <div class="form-actions">
-                            <button type="button" class="btn btn-outline" id="cancelBtn">Annuler</button>
+                            <button type="button" class="btn btn-outline" id="cancelBtn"><span data-i18n="common.cancel">Annuler</span></button>
                             <button type="submit" class="btn btn-primary" id="saveBtn">
-                                <i class="fas fa-save"></i> Enregistrer
+                                <i class="fas fa-save"></i> <span data-i18n="profile.save">Enregistrer</span>
                             </button>
                         </div>
                     </form>
@@ -436,7 +460,7 @@
                 <div class="activity-list" id="activityList">
                     <div class="empty-state">
                         <i class="fas fa-clock"></i>
-                        <p>Aucune activité récente</p>
+                        <p data-i18n="profile.noActivity">Aucune activité récente</p>
                     </div>
                 </div>
             </div>
@@ -444,27 +468,27 @@
             <!-- Settings Tab -->
             <div class="tab-content" id="tab-settings">
                 <div class="edit-card">
-                    <h2>Paramètres du compte</h2>
+                    <h2 data-i18n="profile.settingsTitle">Paramètres du compte</h2>
                     <div class="form-group">
-                        <label>Email</label>
+                        <label data-i18n="profile.emailLabel">Email</label>
                         <input type="email" id="settingsEmail" disabled style="opacity:0.5;">
                     </div>
                     <div class="form-group">
-                        <label>Changer le mot de passe</label>
-                        <input type="password" id="newPassword" placeholder="Nouveau mot de passe (min. 6 caractères)">
+                        <label data-i18n="profile.passwordLabel">Changer le mot de passe</label>
+                        <input type="password" id="newPassword" placeholder="Nouveau mot de passe (min. 6 caractères)" data-i18n-placeholder="profile.passwordPlaceholder">
                     </div>
                     <div class="form-actions">
                         <button type="button" class="btn btn-primary" id="updatePasswordBtn">
-                            <i class="fas fa-key"></i> Mettre à jour le mot de passe
+                            <i class="fas fa-key"></i> <span data-i18n="profile.updatePassword">Mettre à jour le mot de passe</span>
                         </button>
                     </div>
                 </div>
 
                 <div class="danger-zone">
-                    <h3><i class="fas fa-exclamation-triangle"></i> Zone dangereuse</h3>
-                    <p>Supprimer votre compte est irréversible. Toutes vos données seront perdues.</p>
+                    <h3><i class="fas fa-exclamation-triangle"></i> <span data-i18n="profile.dangerZone">Zone dangereuse</span></h3>
+                    <p data-i18n="profile.dangerText">Supprimer votre compte est irréversible. Toutes vos données seront perdues.</p>
                     <button class="btn btn-danger" id="deleteAccountBtn">
-                        <i class="fas fa-trash"></i> Supprimer mon compte
+                        <i class="fas fa-trash"></i> <span data-i18n="profile.deleteAccount">Supprimer mon compte</span>
                     </button>
                 </div>
             </div>
@@ -477,11 +501,16 @@
     <script src="auth.js"></script>
     <script src="db.js"></script>
     <script src="script.js"></script>
+    <script src="widgets.js"></script>
     <script>
         (async () => {
             Auth.init();
             const { user } = await Auth.getUser();
             if (!user) { window.location.href = 'login.html'; return; }
+            if (!Auth.isEmailConfirmed(user)) {
+                await Auth.signOut('login.html');
+                return;
+            }
 
             const { data: profile } = await Auth.getProfile(user.id);
             if (!profile) return;
@@ -663,3 +692,5 @@
     </script>
 </body>
 </html>
+
+

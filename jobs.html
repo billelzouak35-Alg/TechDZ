@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="fr" data-theme="dark">
 <head>
     <meta charset="UTF-8">
@@ -103,15 +103,38 @@
         <div class="container nav-container">
             <a href="index.html" class="nav-logo"><img src="logo.svg" alt="TechDZ" height="32"></a>
             <div class="nav-links">
-                <a href="index.html#features" class="nav-link">Fonctionnalités</a>
-                <a href="forum.html" class="nav-link">Forum</a>
-                <a href="jobs.html" class="nav-link" style="color:var(--primary)">Emplois</a>
-                <a href="training.html" class="nav-link">Formations</a>
-                <a href="news.html" class="nav-link">Actualités</a>
-                <a href="events.html" class="nav-link">Événements</a>
+                <a href="index.html#features" class="nav-link" data-i18n="nav.features">Fonctionnalités</a>
+                <a href="forum.html" class="nav-link" data-i18n="nav.forum">Forum</a>
+                <a href="jobs.html" class="nav-link" style="color:var(--primary)" data-i18n="nav.jobs">Emplois</a>
+                <a href="training.html" class="nav-link" data-i18n="nav.training">Formations</a>
+                <a href="news.html" class="nav-link" data-i18n="nav.news">Actualités</a>
+                <a href="events.html" class="nav-link" data-i18n="nav.events">Événements</a>
+                <a href="networking.html" class="nav-link" data-i18n="nav.networking">Réseautage</a>
             </div>
             <div class="nav-actions">
-                <div id="authLoggedOut"><a href="login.html" class="btn btn-outline btn-sm">Se connecter</a></div>
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <div class="lang-switcher" id="langSwitcher">
+                    <button class="lang-btn" id="langBtn">
+                        <span class="lang-flag">FR</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="lang-dropdown" id="langDropdown">
+                        <button class="lang-option active" data-lang="fr">
+                            <span class="lang-flag">FR</span>
+                            <span>Français</span>
+                        </button>
+                        <button class="lang-option" data-lang="en">
+                            <span class="lang-flag">EN</span>
+                            <span>English</span>
+                        </button>
+                        <button class="lang-option" data-lang="ar">
+                            <span class="lang-flag">AR</span>
+                            <span>العربية</span>
+                        </button>
+                    </div>
+                </div>                <div id="authLoggedOut"><a href="login.html" class="btn btn-outline btn-sm" data-i18n="nav.login">Se connecter</a></div>
                 <div id="authLoggedIn" style="display:none;"><a href="profile.html" class="btn btn-primary btn-sm">Mon profil</a></div>
             </div>
         </div>
@@ -120,47 +143,47 @@
     <div class="jobs-page">
         <div class="container">
             <div class="jobs-header">
-                <h1>Offres d'emploi <span class="text-gradient">IT</span></h1>
-                <p>Des centaines d'opportunités pour tous les informaticiens en Algérie</p>
+                <h1><span data-i18n="jobs.pageTitle">Offres d'emploi</span> <span class="text-gradient">IT</span></h1>
+                <p data-i18n="jobs.pageSubtitle">Des centaines d'opportunités pour tous les informaticiens en Algérie</p>
             </div>
 
             <div class="jobs-filters">
                 <div class="filter-group">
-                    <label>Recherche</label>
-                    <input type="text" placeholder="Poste, entreprise..." id="filterSearch">
+                    <label data-i18n="jobs.searchLabel">Recherche</label>
+                    <input type="text" placeholder="Poste, entreprise..." id="filterSearch" data-i18n-placeholder="jobs.searchPlaceholder">
                 </div>
                 <div class="filter-group">
-                    <label>Catégorie</label>
+                    <label data-i18n="jobs.categoryLabel">Catégorie</label>
                     <select id="filterCategory">
-                        <option value="">Toutes</option>
-                        <option value="Développement">Développement</option>
-                        <option value="Réseau">Réseau & Telecom</option>
-                        <option value="Cybersécurité">Cybersécurité</option>
-                        <option value="Système">Administration Système</option>
-                        <option value="Data">Data Science & IA</option>
-                        <option value="Design">UI/UX Design</option>
-                        <option value="Gestion">Gestion de Projet</option>
+                        <option value="" data-i18n="jobs.all">Toutes</option>
+                        <option value="Développement" data-i18n="jobs.catDev">Développement</option>
+                        <option value="Réseau" data-i18n="jobs.catNetwork">Réseau & Telecom</option>
+                        <option value="Cybersécurité" data-i18n="jobs.catSecurity">Cybersécurité</option>
+                        <option value="Système" data-i18n="jobs.catSys">Administration Système</option>
+                        <option value="Data" data-i18n="jobs.catData">Data Science & IA</option>
+                        <option value="Design" data-i18n="jobs.catDesign">UI/UX Design</option>
+                        <option value="Gestion" data-i18n="jobs.catProj">Gestion de Projet</option>
                     </select>
                 </div>
                 <div class="filter-group">
-                    <label>Type</label>
+                    <label data-i18n="jobs.typeLabel">Type</label>
                     <select id="filterType">
-                        <option value="">Tous</option>
-                        <option value="remote">Remote</option>
-                        <option value="hybrid">Hybride</option>
-                        <option value="onsite">Sur site</option>
+                        <option value="" data-i18n="jobs.all">Tous</option>
+                        <option value="remote" data-i18n="jobs.remote">Remote</option>
+                        <option value="hybrid" data-i18n="jobs.hybrid">Hybride</option>
+                        <option value="onsite" data-i18n="jobs.onsite">Sur site</option>
                     </select>
                 </div>
                 <div class="filter-group">
                     <label>&nbsp;</label>
                     <button class="new-job-btn" id="newJobBtn" style="width:100%;justify-content:center;">
-                        <i class="fas fa-plus"></i> Publier une offre
+                        <i class="fas fa-plus"></i> <span data-i18n="jobs.postOffer">Publier une offre</span>
                     </button>
                 </div>
             </div>
 
             <div class="jobs-grid" id="jobsGrid">
-                <div class="loading" style="grid-column:1/-1;"><i class="fas fa-spinner fa-spin"></i> Chargement des offres...</div>
+                <div class="loading" style="grid-column:1/-1;"><i class="fas fa-spinner fa-spin"></i> <span data-i18n="jobs.loading">Chargement des offres...</span></div>
             </div>
         </div>
     </div>
@@ -169,69 +192,69 @@
     <div class="modal-overlay" id="jobModal">
         <div class="modal">
             <button class="modal-close" id="closeJobModal"><i class="fas fa-times"></i></button>
-            <h2>Publier une offre d'emploi</h2>
+            <h2 data-i18n="jobs.modalTitle">Publier une offre d'emploi</h2>
             <form id="jobForm">
                 <div class="form-group">
-                    <label>Titre du poste *</label>
-                    <input type="text" id="jobTitle" placeholder="Ex: Ingénieur Réseau Senior" required>
+                    <label data-i18n="jobs.titleLabel">Titre du poste *</label>
+                    <input type="text" id="jobTitle" placeholder="Ex: Ingénieur Réseau Senior" required data-i18n-placeholder="jobs.titlePlaceholder">
                 </div>
                 <div class="form-row">
                     <div class="form-group">
-                        <label>Entreprise *</label>
-                        <input type="text" id="jobCompany" placeholder="Nom de l'entreprise" required>
+                        <label data-i18n="jobs.companyLabel">Entreprise *</label>
+                        <input type="text" id="jobCompany" placeholder="Nom de l'entreprise" required data-i18n-placeholder="jobs.companyPlaceholder">
                     </div>
                     <div class="form-group">
-                        <label>Lieu *</label>
-                        <input type="text" id="jobLocation" placeholder="Alger, Oran..." required>
+                        <label data-i18n="jobs.locationLabel">Lieu *</label>
+                        <input type="text" id="jobLocation" placeholder="Alger, Oran..." required data-i18n-placeholder="jobs.locationPlaceholder">
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="form-group">
-                        <label>Type</label>
+                        <label data-i18n="jobs.typeLabel">Type</label>
                         <select id="jobType">
-                            <option value="onsite">Sur site</option>
-                            <option value="hybrid">Hybride</option>
-                            <option value="remote">Remote</option>
+                            <option value="onsite" data-i18n="jobs.onsite">Sur site</option>
+                            <option value="hybrid" data-i18n="jobs.hybrid">Hybride</option>
+                            <option value="remote" data-i18n="jobs.remote">Remote</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label>Catégorie</label>
+                        <label data-i18n="jobs.categoryLabel">Catégorie</label>
                         <select id="jobCategory">
-                            <option value="Développement">Développement</option>
-                            <option value="Réseau">Réseau & Telecom</option>
-                            <option value="Cybersécurité">Cybersécurité</option>
-                            <option value="Système">Administration Système</option>
-                            <option value="Data">Data Science & IA</option>
-                            <option value="Design">UI/UX Design</option>
-                            <option value="Gestion">Gestion de Projet</option>
+                            <option value="Développement" data-i18n="jobs.catDev">Développement</option>
+                            <option value="Réseau" data-i18n="jobs.catNetwork">Réseau & Telecom</option>
+                            <option value="Cybersécurité" data-i18n="jobs.catSecurity">Cybersécurité</option>
+                            <option value="Système" data-i18n="jobs.catSys">Administration Système</option>
+                            <option value="Data" data-i18n="jobs.catData">Data Science & IA</option>
+                            <option value="Design" data-i18n="jobs.catDesign">UI/UX Design</option>
+                            <option value="Gestion" data-i18n="jobs.catProj">Gestion de Projet</option>
                         </select>
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="form-group">
-                        <label>Salaire min (DA)</label>
+                        <label data-i18n="jobs.salaryMinLabel">Salaire min (DA)</label>
                         <input type="number" id="jobSalaryMin" placeholder="120000">
                     </div>
                     <div class="form-group">
-                        <label>Salaire max (DA)</label>
+                        <label data-i18n="jobs.salaryMaxLabel">Salaire max (DA)</label>
                         <input type="number" id="jobSalaryMax" placeholder="200000">
                     </div>
                 </div>
                 <div class="form-group">
-                    <label>Description *</label>
-                    <textarea id="jobDesc" placeholder="Décrivez le poste, les missions, l'entreprise..." required></textarea>
+                    <label data-i18n="jobs.descriptionLabel">Description *</label>
+                    <textarea id="jobDesc" placeholder="Décrivez le poste, les missions, l'entreprise..." required data-i18n-placeholder="jobs.descriptionPlaceholder"></textarea>
                 </div>
                 <div class="form-group">
-                    <label>Compétences (séparées par des virgules)</label>
-                    <input type="text" id="jobSkills" placeholder="Cisco, BGP, Fortinet">
+                    <label data-i18n="jobs.skillsLabel">Compétences (séparées par des virgules)</label>
+                    <input type="text" id="jobSkills" placeholder="Cisco, BGP, Fortinet" data-i18n-placeholder="jobs.skillsPlaceholder">
                 </div>
                 <div class="form-group">
-                    <label>Email de contact</label>
-                    <input type="email" id="jobEmail" placeholder="recrutement@entreprise.com">
+                    <label data-i18n="jobs.emailLabel">Email de contact</label>
+                    <input type="email" id="jobEmail" placeholder="recrutement@entreprise.com" data-i18n-placeholder="jobs.emailPlaceholder">
                 </div>
                 <div class="modal-actions">
-                    <button type="button" class="btn btn-outline" id="cancelJobModal">Annuler</button>
-                    <button type="submit" class="btn btn-primary" id="submitJobBtn"><i class="fas fa-briefcase"></i> Publier</button>
+                    <button type="button" class="btn btn-outline" id="cancelJobModal"><span data-i18n="common.cancel">Annuler</span></button>
+                    <button type="submit" class="btn btn-primary" id="submitJobBtn"><i class="fas fa-briefcase"></i> <span data-i18n="jobs.publish">Publier</span></button>
                 </div>
             </form>
         </div>
@@ -243,11 +266,16 @@
     <script src="auth.js"></script>
     <script src="db.js"></script>
     <script src="script.js"></script>
+    <script src="widgets.js"></script>
     <script>
         (async () => {
             Auth.init();
             let currentUser = null;
             const { user } = await Auth.getUser();
+            if (user && !Auth.isEmailConfirmed(user)) {
+                await Auth.signOut('login.html');
+                return;
+            }
             if (user) {
                 currentUser = user;
                 document.getElementById('authLoggedOut').style.display = 'none';
@@ -360,3 +388,5 @@
     </script>
 </body>
 </html>
+
+

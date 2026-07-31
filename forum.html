@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="fr" data-theme="dark">
 <head>
     <meta charset="UTF-8">
@@ -292,15 +292,38 @@
         <div class="container nav-container">
             <a href="index.html" class="nav-logo"><img src="logo.svg" alt="TechDZ" height="32"></a>
             <div class="nav-links">
-                <a href="index.html#features" class="nav-link">Fonctionnalités</a>
-                <a href="forum.html" class="nav-link" style="color:var(--primary)">Forum</a>
-                <a href="jobs.html" class="nav-link">Emplois</a>
-                <a href="training.html" class="nav-link">Formations</a>
-                <a href="news.html" class="nav-link">Actualités</a>
-                <a href="events.html" class="nav-link">Événements</a>
+                <a href="index.html#features" class="nav-link" data-i18n="nav.features">Fonctionnalités</a>
+                <a href="forum.html" class="nav-link" style="color:var(--primary)" data-i18n="nav.forum">Forum</a>
+                <a href="jobs.html" class="nav-link" data-i18n="nav.jobs">Emplois</a>
+                <a href="training.html" class="nav-link" data-i18n="nav.training">Formations</a>
+                <a href="news.html" class="nav-link" data-i18n="nav.news">Actualités</a>
+                <a href="events.html" class="nav-link" data-i18n="nav.events">Événements</a>
+                <a href="networking.html" class="nav-link" data-i18n="nav.networking">Réseautage</a>
             </div>
             <div class="nav-actions">
-                <div id="authLoggedOut"><a href="login.html" class="btn btn-outline btn-sm">Se connecter</a></div>
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <div class="lang-switcher" id="langSwitcher">
+                    <button class="lang-btn" id="langBtn">
+                        <span class="lang-flag">FR</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="lang-dropdown" id="langDropdown">
+                        <button class="lang-option active" data-lang="fr">
+                            <span class="lang-flag">FR</span>
+                            <span>Français</span>
+                        </button>
+                        <button class="lang-option" data-lang="en">
+                            <span class="lang-flag">EN</span>
+                            <span>English</span>
+                        </button>
+                        <button class="lang-option" data-lang="ar">
+                            <span class="lang-flag">AR</span>
+                            <span>العربية</span>
+                        </button>
+                    </div>
+                </div>                <div id="authLoggedOut"><a href="login.html" class="btn btn-outline btn-sm" data-i18n="nav.login">Se connecter</a></div>
                 <div id="authLoggedIn" style="display:none;"><a href="profile.html" class="btn btn-primary btn-sm">Mon profil</a></div>
             </div>
         </div>
@@ -312,18 +335,18 @@
                 <!-- Sidebar -->
                 <aside class="forum-sidebar">
                     <div class="forum-sidebar-card">
-                        <h3>Catégories</h3>
+                        <h3 data-i18n="forum.categories">Catégories</h3>
                         <div class="category-list" id="categoryList">
                             <a href="#" class="category-link active" data-cat="all">
-                                <i class="fas fa-layer-group"></i> Tous les posts
+                                <i class="fas fa-layer-group"></i> <span data-i18n="forum.allPosts">Tous les posts</span>
                             </a>
                         </div>
                     </div>
                     <div class="forum-sidebar-card">
-                        <h3>Statistiques</h3>
+                        <h3 data-i18n="forum.stats">Statistiques</h3>
                         <div style="display:flex;flex-direction:column;gap:8px;font-size:0.85rem;">
-                            <div style="display:flex;justify-content:space-between;"><span style="color:var(--text-muted)">Posts</span><strong id="totalPosts">0</strong></div>
-                            <div style="display:flex;justify-content:space-between;"><span style="color:var(--text-muted)">Membres</span><strong id="totalMembers">0</strong></div>
+                            <div style="display:flex;justify-content:space-between;"><span style="color:var(--text-muted)" data-i18n="forum.posts">Posts</span><strong id="totalPosts">0</strong></div>
+                            <div style="display:flex;justify-content:space-between;"><span style="color:var(--text-muted)" data-i18n="forum.members">Membres</span><strong id="totalMembers">0</strong></div>
                         </div>
                     </div>
                 </aside>
@@ -333,33 +356,33 @@
                     <!-- LIST VIEW -->
                     <div class="post-list-view" id="listView">
                         <div class="forum-header">
-                            <h1>Forum</h1>
+                            <h1 data-i18n="forum.heading">Forum</h1>
                             <div style="display:flex;gap:12px;align-items:center;">
                                 <div class="forum-search">
                                     <i class="fas fa-search" style="color:var(--text-muted)"></i>
-                                    <input type="text" placeholder="Rechercher..." id="searchInput">
+                                    <input type="text" placeholder="Rechercher..." id="searchInput" data-i18n-placeholder="forum.searchPlaceholder">
                                 </div>
                                 <button class="new-post-btn" id="newPostBtn">
-                                    <i class="fas fa-plus"></i> Nouveau post
+                                    <i class="fas fa-plus"></i> <span data-i18n="forum.newPost">Nouveau post</span>
                                 </button>
                             </div>
                         </div>
                         <div class="post-list" id="postList">
-                            <div class="loading"><i class="fas fa-spinner fa-spin"></i> Chargement...</div>
+                            <div class="loading"><i class="fas fa-spinner fa-spin"></i> <span data-i18n="forum.loading">Chargement...</span></div>
                         </div>
                     </div>
 
                     <!-- DETAIL VIEW -->
                     <div class="post-detail" id="detailView">
-                        <a href="#" class="back-btn" id="backBtn"><i class="fas fa-arrow-left"></i> Retour au forum</a>
+                        <a href="#" class="back-btn" id="backBtn"><i class="fas fa-arrow-left"></i> <span data-i18n="forum.back">Retour au forum</span></a>
                         <div class="detail-card" id="detailCard"></div>
                         <div class="replies-section">
-                            <h2 id="repliesTitle">Réponses</h2>
+                            <h2 id="repliesTitle" data-i18n="forum.replies">Réponses</h2>
                             <div id="repliesList"></div>
                             <div class="reply-form-card" id="replyFormCard" style="display:none; margin-top: 20px;">
-                                <h3>Votre réponse</h3>
-                                <textarea id="replyInput" placeholder="Écrivez votre réponse... (Markdown supporté)"></textarea>
-                                <button class="btn btn-primary" id="submitReplyBtn"><i class="fas fa-reply"></i> Publier</button>
+                                <h3 data-i18n="forum.yourReply">Votre réponse</h3>
+                                <textarea id="replyInput" placeholder="Écrivez votre réponse... (Markdown supporté)" data-i18n-placeholder="forum.replyPlaceholder"></textarea>
+                                <button class="btn btn-primary" id="submitReplyBtn"><i class="fas fa-reply"></i> <span data-i18n="forum.publish">Publier</span></button>
                             </div>
                         </div>
                     </div>
@@ -372,27 +395,27 @@
     <div class="modal-overlay" id="newPostModal">
         <div class="modal" style="position:relative;">
             <button class="modal-close" id="closeModal"><i class="fas fa-times"></i></button>
-            <h2>Nouveau post</h2>
+            <h2 data-i18n="forum.modalTitle">Nouveau post</h2>
             <form id="newPostForm">
                 <div class="form-group">
-                    <label>Catégorie</label>
+                    <label data-i18n="forum.category">Catégorie</label>
                     <select id="postCategory" required></select>
                 </div>
                 <div class="form-group">
-                    <label>Titre</label>
-                    <input type="text" id="postTitle" placeholder="Votre question ou discussion..." required>
+                    <label data-i18n="forum.titleLabel">Titre</label>
+                    <input type="text" id="postTitle" placeholder="Votre question ou discussion..." required data-i18n-placeholder="forum.titlePlaceholder">
                 </div>
                 <div class="form-group">
-                    <label>Contenu</label>
-                    <textarea id="postContent" placeholder="Décrivez votre question en détail... (Markdown supporté)" required></textarea>
+                    <label data-i18n="forum.content">Contenu</label>
+                    <textarea id="postContent" placeholder="Décrivez votre question en détail... (Markdown supporté)" required data-i18n-placeholder="forum.contentPlaceholder"></textarea>
                 </div>
                 <div class="form-group">
-                    <label>Tags (séparés par des virgules)</label>
-                    <input type="text" id="postTags" placeholder="ex: cisco, bgp, réseau">
+                    <label data-i18n="forum.tags">Tags (séparés par des virgules)</label>
+                    <input type="text" id="postTags" placeholder="ex: cisco, bgp, réseau" data-i18n-placeholder="forum.tagsPlaceholder">
                 </div>
                 <div class="modal-actions">
-                    <button type="button" class="btn btn-outline" id="cancelModal">Annuler</button>
-                    <button type="submit" class="btn btn-primary" id="submitPostBtn"><i class="fas fa-paper-plane"></i> Publier</button>
+                    <button type="button" class="btn btn-outline" id="cancelModal"><span data-i18n="common.cancel">Annuler</span></button>
+                    <button type="submit" class="btn btn-primary" id="submitPostBtn"><i class="fas fa-paper-plane"></i> <span data-i18n="forum.publish">Publier</span></button>
                 </div>
             </form>
         </div>
@@ -404,6 +427,7 @@
     <script src="auth.js"></script>
     <script src="db.js"></script>
     <script src="script.js"></script>
+    <script src="widgets.js"></script>
     <script>
         (async () => {
             Auth.init();
@@ -411,6 +435,10 @@
             let currentCategory = null;
 
             const { user } = await Auth.getUser();
+            if (user && !Auth.isEmailConfirmed(user)) {
+                await Auth.signOut('login.html');
+                return;
+            }
             if (user) {
                 currentUser = user;
                 document.getElementById('authLoggedOut').style.display = 'none';
@@ -550,7 +578,9 @@
                 // Load replies
                 const { data: replies } = await DB.getForumReplies(postId);
                 const repliesList = document.getElementById('repliesList');
-                document.getElementById('repliesTitle').textContent = `Réponses (${replies?.length || 0})`;
+                const lang = document.documentElement.getAttribute('lang') || 'fr';
+                const tr = (window.translations && window.translations[lang]) || window.translations.fr;
+                document.getElementById('repliesTitle').textContent = `${tr.forum.replies} (${replies?.length || 0})`;
 
                 if (replies && replies.length > 0) {
                     repliesList.innerHTML = replies.map(r => `
@@ -694,3 +724,5 @@
     </script>
 </body>
 </html>
+
+

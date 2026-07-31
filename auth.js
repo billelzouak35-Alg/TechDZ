@@ -29,21 +29,30 @@ const Auth = {
     return this.supabase;
   },
 
+  // URL de retour après confirmation d'email
+  authCallbackUrl() {
+    return window.APP_URL + 'auth-callback.html';
+  },
+
   // Sign up with email/password
-  async signUp(email, password, fullName) {
+  async signUp(email, password, fullName, emailRedirectTo) {
     try {
       const client = this.getClient();
+      const options = { data: { full_name: fullName } };
+      if (emailRedirectTo || window.APP_URL) {
+        options.emailRedirectTo = emailRedirectTo || this.authCallbackUrl();
+      }
       const { data, error } = await client.auth.signUp({
         email,
         password,
-        options: {
-          data: { full_name: fullName }
-        }
+        options
       });
 
       if (error) return { data, error };
 
-      if (data?.user) {
+      // Ne créer le profil qu'une fois l'email confirmé
+      // (la création au moment de la confirmation se fait dans auth-callback.html)
+      if (data?.user && data.user.email_confirmed_at) {
         await client.from('profiles').upsert({
           id: data.user.id,
           full_name: fullName || 'Utilisateur'
@@ -54,6 +63,36 @@ const Auth = {
     } catch (e) {
       return { data: null, error: { message: e.message } };
     }
+  },
+
+  // Renvoyer l'email de confirmation
+  async resendConfirmation(email) {
+    try {
+      const client = this.getClient();
+      const options = {};
+      if (window.APP_URL) options.emailRedirectTo = this.authCallbackUrl();
+      const { data, error } = await client.auth.resend({
+        type: 'signup',
+        email,
+        options
+      });
+      return { data, error };
+    } catch (e) {
+      return { data: null, error: { message: e.message } };
+    }
+  },
+
+  // Vérifier si l'email d'un utilisateur est confirmé
+  isEmailConfirmed(user) {
+    return !!(user && user.email_confirmed_at);
+  },
+
+  // Récupérer la session courante (jetons dans l'URL après confirmation)
+  // Compatible avec les versions sync et async de supabase-js v2
+  async getSession() {
+    const client = this.getClient();
+    const res = await client.auth.getSession();
+    return { session: (res && res.data && res.data.session) || null };
   },
 
   // Sign in with email/password
@@ -76,23 +115,36 @@ const Auth = {
     const { data, error } = await client.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: window.location.origin + '/index.html'
+        redirectTo: (window.APP_URL || window.location.origin + '/') + 'index.html'
       }
     });
     return { data, error };
   },
 
-  // Sign out
-  async signOut() {
+  // Sign out — comportement selon redirectUrl :
+  //   - string : redirige vers cette URL
+  //   - null   : aucune redirection (déconnexion seule)
+  //   - absent : redirige vers index.html (comportement par défaut)
+  async signOut(redirectUrl) {
     try {
       const client = this.getClient();
       const { error } = await client.auth.signOut();
       localStorage.removeItem('techdz-user');
+      if (typeof redirectUrl === 'string') {
+        window.location.href = redirectUrl;
+        return { error };
+      }
+      if (redirectUrl === null) return { error };
       const base = window.location.pathname.includes('/admin/') ? '../' : '';
       window.location.href = base + 'index.html';
       return { error };
     } catch (e) {
       localStorage.removeItem('techdz-user');
+      if (typeof redirectUrl === 'string') {
+        window.location.href = redirectUrl;
+        return { error: e };
+      }
+      if (redirectUrl === null) return { error: e };
       window.location.href = 'index.html';
       return { error: e };
     }
