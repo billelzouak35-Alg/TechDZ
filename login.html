@@ -123,6 +123,15 @@
             transform: scale(1.05);
         }
         .btn-google img { width: 20px; height: 20px; }
+        .forgot-link {
+            display: block;
+            text-align: right;
+            font-size: 0.85rem;
+            color: var(--primary);
+            font-weight: 600;
+            margin-top: -8px;
+        }
+        .forgot-link:hover { text-decoration: underline; }
         .auth-footer {
             text-align: center;
             margin-top: 24px;
@@ -195,6 +204,7 @@
                 <button type="submit" class="btn btn-primary btn-lg btn-full" id="loginBtn">
                     <i class="fas fa-sign-in-alt"></i> Se connecter
                 </button>
+                <a href="reset-password.html" class="forgot-link">Mot de passe oublié ?</a>
             </form>
 
             <div class="divider">ou</div>

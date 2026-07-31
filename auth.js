@@ -87,6 +87,34 @@ const Auth = {
     return !!(user && user.email_confirmed_at);
   },
 
+  // Demander un email de réinitialisation de mot de passe
+  // Le lien de l'email mène vers change-password.html (URL à ajouter
+  // dans les Redirect URLs du dashboard Supabase)
+  async requestPasswordReset(email) {
+    try {
+      const client = this.getClient();
+      const { data, error } = await client.auth.resetPasswordForEmail(email, {
+        redirectTo: window.APP_URL + 'change-password.html'
+      });
+      return { data, error };
+    } catch (e) {
+      return { data: null, error: { message: e.message } };
+    }
+  },
+
+  // Changer le mot de passe (session de récupération active)
+  async updatePassword(newPassword) {
+    try {
+      const client = this.getClient();
+      const { data, error } = await client.auth.updateUser({
+        password: newPassword
+      });
+      return { data, error };
+    } catch (e) {
+      return { data: null, error: { message: e.message } };
+    }
+  },
+
   // Récupérer la session courante (jetons dans l'URL après confirmation)
   // Compatible avec les versions sync et async de supabase-js v2
   async getSession() {

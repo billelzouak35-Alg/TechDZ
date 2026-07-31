@@ -28,8 +28,10 @@ window.APP_URL = APP_URL;
 //    - Site URL (production) : https://<votre-utilisateur>.github.io/TechDZ-master/
 //    - Redirect URLs :
 //        https://<votre-utilisateur>.github.io/TechDZ-master/auth-callback.html
+//        https://<votre-utilisateur>.github.io/TechDZ-master/change-password.html
 //        https://<votre-utilisateur>.github.io/TechDZ-master/index.html
 //        http://localhost:5500/auth-callback.html  (si test en local)
+//        http://localhost:5500/change-password.html (si test en local)
 //
 // 3. Authentication → Providers : Google activé avec Client ID/Secret OAuth
 //    (Console Google Cloud) si le bouton Google doit fonctionner.
