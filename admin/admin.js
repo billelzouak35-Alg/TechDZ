@@ -14,6 +14,10 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Check auth
   const { user, error: userError } = await Auth.getUser();
   console.log('User:', user?.email, 'Error:', userError);
+  if (user && !Auth.isEmailConfirmed(user)) {
+    await Auth.signOut('../login.html');
+    return;
+  }
   if (!user) {
     window.location.href = 'login.html';
     return;
