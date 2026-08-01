@@ -1,9 +1,9 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="fr" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Formations gratuites — TechDZ</title>
+    <title data-i18n="title.training">Formations gratuites — TechDZ</title>
     <link rel="icon" type="image/svg+xml" href="logo.svg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -277,12 +277,12 @@
 
                 if (error) {
                     console.error('Error loading courses:', error);
-                    grid.innerHTML = `<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><p>Erreur: ${error.message}</p></div>`;
+                    grid.innerHTML = `<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><p>${t('common.error')}: ${error.message}</p></div>`;
                     return;
                 }
 
                 if (!data || data.length === 0) {
-                    grid.innerHTML = '<div class="empty-state"><i class="fas fa-graduation-cap"></i><p>Aucune formation pour le moment</p></div>';
+                    grid.innerHTML = '<div class="empty-state"><i class="fas fa-graduation-cap"></i><p>' + t('training.empty') + '</p></div>';
                     return;
                 }
 
@@ -290,7 +290,7 @@
                     <div class="course-card-full">
                         <div class="course-img-lg ${colorMap[c.category] || 'blue'}">
                             <i class="${iconMap[c.category] || 'fas fa-book'} course-icon-lg"></i>
-                            <span class="course-level-badge ${c.level}">${c.level === 'beginner' ? 'Débutant' : c.level === 'intermediate' ? 'Intermédiaire' : 'Avancé'}</span>
+                            <span class="course-level-badge ${c.level}">${c.level === 'beginner' ? t('training.beginner') : c.level === 'intermediate' ? t('training.intermediate') : t('training.advanced')}</span>
                         </div>
                         <div class="course-body">
                             <span class="course-category-tag">${c.category}</span>
@@ -302,7 +302,7 @@
                                 <span><i class="fas fa-star"></i> ${c.rating || '—'}</span>
                             </div>
                             <button class="enroll-btn" onclick="enrollCourse(${c.id})">
-                                <i class="fas fa-rocket"></i> S'inscrire
+                                <i class="fas fa-rocket"></i> ${t('events.join')}
                             </button>
                         </div>
                     </div>
@@ -322,8 +322,8 @@
             window.enrollCourse = async (courseId) => {
                 if (!currentUser) { window.location.href = 'login.html'; return; }
                 const { error } = await DB.enrollCourse(courseId, currentUser.id);
-                if (error) { alert('Erreur: ' + error.message); return; }
-                alert('Inscription enregistrée avec succès !');
+                if (error) { alert(t('common.error') + ': ' + error.message); return; }
+                alert(t('training.enrolled'));
                 loadCourses();
             };
 
@@ -351,11 +351,11 @@
                     is_published: true
                 });
                 console.log('Create course result:', { data, error });
-                if (error) { alert('Erreur: ' + error.message); return; }
+                if (error) { alert(t('common.error') + ': ' + error.message); return; }
 
                 document.getElementById('courseModal').classList.remove('open');
                 document.getElementById('courseForm').reset();
-                btn.innerHTML = '<i class="fas fa-graduation-cap"></i> Proposer';
+                btn.innerHTML = '<i class="fas fa-graduation-cap"></i> ' + t('training.proposeBtn');
                 btn.disabled = false;
                 loadCourses();
             });

@@ -11,6 +11,14 @@ window.SUPABASE_URL = SUPABASE_CONFIG.url;
 window.SUPABASE_ANON_KEY = SUPABASE_CONFIG.anonKey;
 
 // ============================================
+// TechDZ — hCaptcha Configuration
+// Remplacer 'VOTRE_SITE_KEY_HCAPTCHA' par votre vraie Site Key
+// (étapes complètes de configuration dans le commentaire en bas de fichier)
+// ============================================
+const HCAPTCHA_SITE_KEY = 'dc0a186c-baae-4322-8de0-56a22daeb8f2';
+window.HCAPTCHA_SITE_KEY = HCAPTCHA_SITE_KEY;
+
+// ============================================
 // URL de base de l'application (GitHub Pages avec sous-dossier ou local)
 // Ex: https://user.github.io/TechDZ-master/ ou file:///.../TechDZ-master/
 // ============================================
@@ -38,6 +46,16 @@ window.APP_URL = APP_URL;
 //
 // 4. Émails de confirmation : personnalisables dans
 //    Authentication → Emails Templates ("Confirm signup").
+//
+// 5. hCaptcha (protection anti-bots sur l'inscription et la connexion) :
+//    a. Créez un site sur https://www.hcaptcha.com (offre gratuite) :
+//       - Hostnames à ajouter : <votre-utilisateur>.github.io et localhost
+//       - Type de défi : "Puzzle" (recommandé) ou "Invisible"
+//    b. Récupérez la "Site Key" → collez-la dans HCAPTCHA_SITE_KEY ci-dessus.
+//    c. Récupérez la "Secret Key" → Dashboard Supabase :
+//       Authentication → CAPTCHA → activez l'option → collez la Secret Key → Save.
+//    d. Tant que la Site Key reste 'VOTRE_SITE_KEY_HCAPTCHA', les formulaires
+//       fonctionnent normalement sans exigence de captcha (mode désactivé).
 //
 // IMPORTANT : sans ces réglages, le lien de confirmation redirigera
 // vers l'URL par défaut (non reconnue) et auth-callback.html ne sera pas appelé.

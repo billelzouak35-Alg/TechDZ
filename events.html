@@ -1,9 +1,9 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="fr" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Événements — TechDZ</title>
+    <title data-i18n="title.events">Événements — TechDZ</title>
     <link rel="icon" type="image/svg+xml" href="logo.svg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -251,7 +251,7 @@
             }
 
             const iconMap = { meetup: 'fas fa-users', workshop: 'fas fa-tools', conference: 'fas fa-microphone', hackathon: 'fas fa-terminal', webinar: 'fas fa-video' };
-            const monthNames = ['Jan','Fév','Mar','Avr','Mai','Jun','Jul','Aoû','Sep','Oct','Nov','Déc'];
+            const monthNames = t('common.monthShort');
 
             function formatDate(dateStr) {
                 const d = new Date(dateStr);
@@ -265,12 +265,12 @@
 
                 if (error) {
                     console.error('Error loading events:', error);
-                    list.innerHTML = `<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><p>Erreur: ${error.message}</p></div>`;
+                    list.innerHTML = `<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><p>${t('common.error')}: ${error.message}</p></div>`;
                     return;
                 }
 
                 if (!data || data.length === 0) {
-                    list.innerHTML = '<div class="empty-state"><i class="fas fa-calendar-alt"></i><p>Aucun événement pour le moment</p></div>';
+                    list.innerHTML = '<div class="empty-state"><i class="fas fa-calendar-alt"></i><p>' + t('events.empty') + '</p></div>';
                     return;
                 }
 
@@ -296,16 +296,16 @@
                                 <p>${e.description}</p>
                                 <div class="event-meta">
                                     <span><i class="fas fa-clock"></i> ${e.event_time || '—'}</span>
-                                    <span><i class="fas fa-map-marker-alt"></i> ${e.location || 'En ligne'}</span>
-                                    ${spotsLeft !== null ? `<span><i class="fas fa-users"></i> ${spotsLeft > 0 ? spotsLeft + ' places' : 'Complet'}</span>` : ''}
+                                    <span><i class="fas fa-map-marker-alt"></i> ${e.location || t('events.online')}</span>
+                                    ${spotsLeft !== null ? `<span><i class="fas fa-users"></i> ${spotsLeft > 0 ? spotsLeft + ' ' + t('events.places') : t('events.full')}</span>` : ''}
                                 </div>
                                 <div class="event-footer">
                                     <div class="attendees">
-                                        <i class="fas fa-user-check"></i> ${e.registration_count || 0} inscrits
+                                        <i class="fas fa-user-check"></i> ${e.registration_count || 0} ${t('events.inscrits')}
                                         ${e.max_participants ? ` / ${e.max_participants}` : ''}
                                     </div>
                                     <button class="rsvp-btn ${isFull ? 'full' : ''}" onclick="rsvpEvent(${e.id}, ${isFull})" ${isFull ? 'disabled' : ''}>
-                                        ${isFull ? 'Complet' : '<i class="fas fa-check"></i> S\'inscrire'}
+                                        ${isFull ? t('events.full') : '<i class="fas fa-check"></i> ' + t('events.join')}
                                     </button>
                                 </div>
                             </div>
@@ -317,13 +317,13 @@
             async function loadUpcoming() {
                 const { data } = await DB.getEvents();
                 const el = document.getElementById('upcomingEvents');
-                if (!data || data.length === 0) { el.innerHTML = '<div style="font-size:0.85rem;color:var(--text-muted)">Aucun</div>'; return; }
+                if (!data || data.length === 0) { el.innerHTML = '<div style="font-size:0.85rem;color:var(--text-muted)">' + t('events.none') + '</div>'; return; }
                 const upcoming = [...data].sort((a, b) => new Date(a.event_date) - new Date(b.event_date)).slice(0, 5);
                 el.innerHTML = upcoming.map(e => `
                     <div class="sidebar-mini">
                         <div class="mini-date">${formatDate(e.event_date)}</div>
                         <div class="mini-title">${e.title}</div>
-                        <div class="mini-info"><i class="fas fa-map-marker-alt"></i> ${e.location || 'En ligne'} · ${e.event_type}</div>
+                        <div class="mini-info"><i class="fas fa-map-marker-alt"></i> ${e.location || t('events.online')} · ${e.event_type}</div>
                     </div>
                 `).join('');
             }
@@ -331,8 +331,8 @@
             window.rsvpEvent = async (eventId, isFull) => {
                 if (!currentUser || isFull) { if (!currentUser) window.location.href = 'login.html'; return; }
                 const { error } = await DB.rsvpEvent(eventId, currentUser.id);
-                if (error) { alert('Erreur: ' + error.message); return; }
-                alert('Inscription enregistrée avec succès !');
+                if (error) { alert(t('common.error') + ': ' + error.message); return; }
+                alert(t('events.created'));
                 loadEvents();
                 loadUpcoming();
             };
@@ -363,7 +363,7 @@
 
                 document.getElementById('eventModal').classList.remove('open');
                 document.getElementById('eventForm').reset();
-                btn.innerHTML = '<i class="fas fa-calendar-plus"></i> Créer';
+                btn.innerHTML = '<i class="fas fa-calendar-plus"></i> ' + t('events.submit');
                 btn.disabled = false;
                 loadEvents();
                 loadUpcoming();

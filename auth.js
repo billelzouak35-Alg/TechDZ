@@ -31,14 +31,17 @@ const Auth = {
 
   // URL de retour après confirmation d'email
   authCallbackUrl() {
-    return window.APP_URL + 'auth-callback.html';
+    const lang = localStorage.getItem('techdz-lang');
+    return window.APP_URL + 'auth-callback.html' + (lang ? '?lang=' + lang : '');
   },
 
   // Sign up with email/password
-  async signUp(email, password, fullName, emailRedirectTo) {
+  async signUp(email, password, fullName, captchaToken, emailRedirectTo) {
     try {
       const client = this.getClient();
       const options = { data: { full_name: fullName } };
+      // Token hCaptcha (optionnel : requis uniquement si le captcha est activé côté Supabase)
+      if (captchaToken) options.captchaToken = captchaToken;
       if (emailRedirectTo || window.APP_URL) {
         options.emailRedirectTo = emailRedirectTo || this.authCallbackUrl();
       }
@@ -55,6 +58,7 @@ const Auth = {
       if (data?.user && data.user.email_confirmed_at) {
         await client.from('profiles').upsert({
           id: data.user.id,
+          email: data.user.email,
           full_name: fullName || 'Utilisateur'
         }, { onConflict: 'id' });
       }
@@ -93,8 +97,10 @@ const Auth = {
   async requestPasswordReset(email) {
     try {
       const client = this.getClient();
+      const lang = localStorage.getItem('techdz-lang');
+      const redirectTo = window.APP_URL + 'change-password.html' + (lang ? '?lang=' + lang : '');
       const { data, error } = await client.auth.resetPasswordForEmail(email, {
-        redirectTo: window.APP_URL + 'change-password.html'
+        redirectTo
       });
       return { data, error };
     } catch (e) {
@@ -124,16 +130,31 @@ const Auth = {
   },
 
   // Sign in with email/password
-  async signIn(email, password) {
+  async signIn(email, password, captchaToken) {
     try {
       const client = this.getClient();
+      const options = {};
+      // Token hCaptcha (optionnel : requis uniquement si le captcha est activé côté Supabase)
+      if (captchaToken) options.captchaToken = captchaToken;
       const { data, error } = await client.auth.signInWithPassword({
         email,
-        password
+        password,
+        options
       });
       return { data, error };
     } catch (e) {
       return { data: null, error: { message: e.message } };
+    }
+  },
+
+  // Réinitialiser le widget hCaptcha (token utilisé, expiré ou erreur)
+  resetCaptcha() {
+    try {
+      if (window.hcaptcha && typeof window.hcaptcha.reset === 'function') {
+        window.hcaptcha.reset();
+      }
+    } catch (e) {
+      console.error('Erreur lors de la réinitialisation hCaptcha :', e);
     }
   },
 

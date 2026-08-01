@@ -1,9 +1,9 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="fr" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Emplois IT — TechDZ</title>
+    <title data-i18n="title.jobs">Emplois IT — TechDZ</title>
     <link rel="icon" type="image/svg+xml" href="logo.svg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -306,7 +306,7 @@
                 }
 
                 if (filtered.length === 0) {
-                    grid.innerHTML = '<div class="empty-state"><i class="fas fa-briefcase"></i><p>Aucune offre d\'emploi pour le moment</p></div>';
+                    grid.innerHTML = '<div class="empty-state"><i class="fas fa-briefcase"></i><p>' + t('jobs.empty') + '</p></div>';
                     return;
                 }
 
@@ -317,7 +317,7 @@
                                 <div class="company-logo-lg ${colors[i % 4]}">${j.company[0]}</div>
                                 <div><strong>${j.company}</strong><span>${j.location}</span></div>
                             </div>
-                            <span class="job-type-badge ${j.job_type}">${j.job_type === 'remote' ? 'Remote' : j.job_type === 'hybrid' ? 'Hybride' : 'Sur site'}</span>
+                            <span class="job-type-badge ${j.job_type}">${j.job_type === 'remote' ? t('jobs.remote') : j.job_type === 'hybrid' ? t('jobs.hybrid') : t('jobs.onsite')}</span>
                         </div>
                         <h3>${j.title}</h3>
                         <p class="job-desc">${j.description}</p>
@@ -325,7 +325,7 @@
                             ${(j.requirements || []).slice(0, 4).map(r => `<span>${r}</span>`).join('')}
                         </div>
                         <div class="job-card-bottom">
-                            <span class="job-salary-lg">${j.salary_min ? j.salary_min.toLocaleString() + ' - ' + (j.salary_max || '').toLocaleString() + ' DA' : 'Non spécifié'}</span>
+                            <span class="job-salary-lg">${j.salary_min ? j.salary_min.toLocaleString() + ' - ' + (j.salary_max || '').toLocaleString() + ' DA' : t('jobs.notSpecified')}</span>
                             <span class="job-date-lg">${timeAgo(j.created_at)}</span>
                         </div>
                     </div>
@@ -370,17 +370,17 @@
 
                 document.getElementById('jobModal').classList.remove('open');
                 document.getElementById('jobForm').reset();
-                btn.innerHTML = '<i class="fas fa-briefcase"></i> Publier';
+                btn.innerHTML = '<i class="fas fa-briefcase"></i> ' + t('jobs.publish');
                 btn.disabled = false;
                 loadJobs();
             });
 
             function timeAgo(date) {
                 const s = Math.floor((Date.now() - new Date(date)) / 1000);
-                if (s < 60) return "à l'instant";
-                if (s < 3600) return `il y a ${Math.floor(s/60)}min`;
-                if (s < 86400) return `il y a ${Math.floor(s/3600)}h`;
-                return `il y a ${Math.floor(s/86400)}j`;
+                if (s < 60) return t('common.justNow');
+                if (s < 3600) return t('common.ago') + ' ' + Math.floor(s/60) + t('common.min');
+                if (s < 86400) return t('common.ago') + ' ' + Math.floor(s/3600) + t('common.hr');
+                return t('common.ago') + ' ' + Math.floor(s/86400) + t('common.day');
             }
 
             await loadJobs();

@@ -1,9 +1,9 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="fr" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TechDZ — La Communauté IT d'Algérie</title>
+    <title data-i18n="title.index">TechDZ — La Communauté IT d'Algérie</title>
     <meta name="description" content="Rejoignez TechDZ, la plus grande communauté d'informaticiens en Algérie. Forum, emplois, formations, actualités et événements tech.">
     <link rel="icon" type="image/svg+xml" href="logo.svg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -83,15 +83,15 @@
                                 <span id="dropdownEmail">email</span>
                             </div>
                             <div class="dropdown-divider"></div>
-                            <a href="profile.html" class="dropdown-item"><i class="fas fa-user"></i> Mon profil</a>
-                            <a href="admin/index.html" class="dropdown-item" id="adminLink" style="display:none;"><i class="fas fa-cog"></i> Admin</a>
+                            <a href="profile.html" class="dropdown-item"><i class="fas fa-user"></i> <span data-i18n="nav.profile">Mon profil</span></a>
+                            <a href="admin/index.html" class="dropdown-item" id="adminLink" style="display:none;"><i class="fas fa-cog"></i> <span data-i18n="nav.admin">Admin</span></a>
                             <div class="dropdown-divider"></div>
-                            <button class="dropdown-item logout" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Déconnexion</button>
+                            <button class="dropdown-item logout" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> <span data-i18n="common.logout">Déconnexion</span></button>
                         </div>
                     </div>
                 </div>
             </div>
-            <button class="mobile-toggle" id="mobileToggle" aria-label="Menu">
+            <button class="mobile-toggle" id="mobileToggle" data-i18n-aria="common.menu" aria-label="Menu">
                 <span></span><span></span><span></span>
             </button>
         </div>
@@ -101,7 +101,7 @@
     <div class="mobile-nav" id="mobileNav">
         <div class="mobile-nav-header">
             <img src="logo.svg" alt="TechDZ" height="28">
-            <button class="close-btn" id="mobileClose" aria-label="Fermer">
+            <button class="close-btn" id="mobileClose" data-i18n-aria="common.close" aria-label="Fermer">
                 <i class="fas fa-times"></i>
             </button>
         </div>
@@ -121,8 +121,8 @@
                 <a href="register.html" class="btn btn-primary btn-full" style="margin-top:8px;" data-i18n="nav.join">Rejoindre TechDZ</a>
             </div>
             <div id="mobileAuthIn" style="display:none;">
-                <a href="profile.html" class="btn btn-outline btn-full">Mon profil</a>
-                <button class="btn btn-primary btn-full" style="margin-top:8px;" id="mobileLogoutBtn">Déconnexion</button>
+                <a href="profile.html" class="btn btn-outline btn-full" data-i18n="nav.profile">Mon profil</a>
+                <button class="btn btn-primary btn-full" style="margin-top:8px;" id="mobileLogoutBtn"><span data-i18n="common.logout">Déconnexion</span></button>
             </div>
         </div>
     </div>
@@ -186,11 +186,11 @@
                         <div class="card-avatar green">KM</div>
                         <div class="card-info">
                             <strong>Karim M.</strong>
-                            <span>Ingénieur Réseau</span>
+                            <span data-i18n="hero.cardRole1">Ingénieur Réseau</span>
                         </div>
-                        <span class="card-badge">Actif</span>
+                        <span class="card-badge" data-i18n="hero.cardActive">Actif</span>
                     </div>
-                    <p class="card-text">"Grâce à TechDZ, j'ai pu résoudre un problème critique de BGP et décrocher un poste dans une telecom algérienne."</p>
+                    <p class="card-text" data-i18n="hero.cardText">"Grâce à TechDZ, j'ai pu résoudre un problème critique de BGP et décrocher un poste dans une telecom algérienne."</p>
                     <div class="card-reactions">
                         <span><i class="fas fa-heart"></i> 52</span>
                         <span><i class="fas fa-comment"></i> 18</span>
@@ -201,7 +201,7 @@
                         <div class="card-avatar blue">SA</div>
                         <div class="card-info">
                             <strong>Samir A.</strong>
-                            <span>Admin Système & Cloud</span>
+                            <span data-i18n="hero.cardRole2">Admin Système & Cloud</span>
                         </div>
                     </div>
                     <div class="card-code">
@@ -213,10 +213,10 @@
                 </div>
                 <div class="hero-card hero-card-3">
                     <div class="card-event">
-                        <span class="event-date">15 AOÛT</span>
+                        <span class="event-date">15 <span data-i18n="index.eventMonth">AOÛT</span></span>
                         <div>
-                            <strong>Meetup Cybersécurité</strong>
-                            <span>45+ participants attendus</span>
+                            <strong data-i18n="index.eventTitle">Meetup Cybersécurité</strong>
+                            <span data-i18n="index.eventAttendees">45+ participants attendus</span>
                         </div>
                     </div>
                 </div>
@@ -239,7 +239,7 @@
                     </div>
                     <h3 data-i18n="features.forumTitle">Forum de discussions</h3>
                     <p data-i18n="features.forumDesc">Réseau, cybersécurité, bases de données, développement, IA, cloud — posez vos questions et échangez avec des experts de tous les domaines IT.</p>
-                    <span class="feature-link">Explorer <i class="fas fa-arrow-right"></i></span>
+                    <span class="feature-link" data-i18n="features.forumLink">Explorer <i class="fas fa-arrow-right"></i></span>
                 </a>
                 <a href="jobs.html" class="feature-card" data-animate="fade-up" data-delay="100">
                     <div class="feature-icon green">
@@ -247,7 +247,7 @@
                     </div>
                     <h3 data-i18n="features.jobsTitle">Offres d'emploi</h3>
                     <p data-i18n="features.jobsDesc">Développeurs, admin sys, network engineers, DBA, chefs de projet, analystes SI, auditeurs IT — toutes les opportunités sont ici.</p>
-                    <span class="feature-link">Voir les offres <i class="fas fa-arrow-right"></i></span>
+                    <span class="feature-link" data-i18n="features.jobsLink">Voir les offres <i class="fas fa-arrow-right"></i></span>
                 </a>
                 <a href="training.html" class="feature-card" data-animate="fade-up" data-delay="200">
                     <div class="feature-icon purple">
@@ -255,7 +255,7 @@
                     </div>
                     <h3 data-i18n="features.trainingTitle">Formations gratuites</h3>
                     <p data-i18n="features.trainingDesc">Certifications (CCNA, AWS, CEH), cours de réseaux, administration système, data science, gestion de projets — du débutant à l'expert.</p>
-                    <span class="feature-link">Apprendre <i class="fas fa-arrow-right"></i></span>
+                    <span class="feature-link" data-i18n="features.trainingLink">Apprendre <i class="fas fa-arrow-right"></i></span>
                 </a>
                 <a href="news.html" class="feature-card" data-animate="fade-up" data-delay="300">
                     <div class="feature-icon amber">
@@ -263,7 +263,7 @@
                     </div>
                     <h3 data-i18n="features.newsTitle">Actualités tech</h3>
                     <p data-i18n="features.newsDesc">Restez informé des tendances IT, des offres d'emploi, des événements et des innovations technologiques en Algérie et dans le monde.</p>
-                    <span class="feature-link">Lire <i class="fas fa-arrow-right"></i></span>
+                    <span class="feature-link" data-i18n="features.newsLink">Lire <i class="fas fa-arrow-right"></i></span>
                 </a>
                 <a href="events.html" class="feature-card" data-animate="fade-up" data-delay="400">
                     <div class="feature-icon red">
@@ -271,7 +271,7 @@
                     </div>
                     <h3 data-i18n="features.eventsTitle">Événements</h3>
                     <p data-i18n="features.eventsDesc">Meetups, conférences, hackathons, ateliers pratiques. Participez ou organisez des événements IT près de chez vous.</p>
-                    <span class="feature-link">Voir <i class="fas fa-arrow-right"></i></span>
+                    <span class="feature-link" data-i18n="features.eventsLink">Voir <i class="fas fa-arrow-right"></i></span>
                 </a>
                 <a href="profile.html" class="feature-card" data-animate="fade-up" data-delay="500">
                     <div class="feature-icon teal">
@@ -279,7 +279,7 @@
                     </div>
                     <h3 data-i18n="features.networkTitle">Networking</h3>
                     <p data-i18n="features.networkDesc">Connectez-vous avec des professionnels de tous horizons IT, créez votre profil et développez votre réseau professionnel.</p>
-                    <span class="feature-link">Se connecter <i class="fas fa-arrow-right"></i></span>
+                    <span class="feature-link" data-i18n="features.networkingLink">Se connecter <i class="fas fa-arrow-right"></i></span>
                 </a>
             </div>
         </div>
@@ -321,7 +321,7 @@
                 </div>
                 <div class="split-visual">
                     <div class="forum-preview glass-card" id="forumPreview">
-                        <div class="loading"><i class="fas fa-spinner fa-spin"></i> Chargement...</div>
+                        <div class="loading"><i class="fas fa-spinner fa-spin"></i> <span data-i18n="common.loading">Chargement...</span></div>
                     </div>
                 </div>
             </div>
@@ -337,7 +337,7 @@
                 <p class="section-desc" data-i18n="jobs.desc">Des centaines d'offres vérifiées d'entreprises algériennes et internationales</p>
             </div>
             <div class="jobs-grid" id="homeJobsGrid">
-                <div class="loading" style="grid-column:1/-1; text-align:center; padding:40px; color:var(--text-muted);"><i class="fas fa-spinner fa-spin"></i> Chargement des offres...</div>
+                <div class="loading" style="grid-column:1/-1; text-align:center; padding:40px; color:var(--text-muted);"><i class="fas fa-spinner fa-spin"></i> <span data-i18n="jobs.loading">Chargement des offres...</span></div>
             </div>
             <div class="jobs-cta" data-animate="fade-up">
                 <a href="jobs.html" class="btn btn-primary btn-lg">
@@ -356,7 +356,7 @@
                 <p class="section-desc" data-i18n="training.desc">Cours, tutoriels et ressources partagés par la communauté</p>
             </div>
             <div class="training-grid" id="homeTrainingGrid">
-                <div class="loading" style="grid-column:1/-1; text-align:center; padding:40px; color:var(--text-muted);"><i class="fas fa-spinner fa-spin"></i> Chargement des formations...</div>
+                <div class="loading" style="grid-column:1/-1; text-align:center; padding:40px; color:var(--text-muted);"><i class="fas fa-spinner fa-spin"></i> <span data-i18n="training.loading">Chargement des formations...</span></div>
             </div>
         </div>
     </section>
@@ -369,7 +369,7 @@
                 <h2 class="section-title" data-i18n="news.title">Restez à jour avec <span class="text-gradient" data-i18n="news.title2">la tech</span></h2>
             </div>
             <div class="news-grid" id="homeNewsGrid">
-                <div class="loading" style="grid-column:1/-1; text-align:center; padding:40px; color:var(--text-muted);"><i class="fas fa-spinner fa-spin"></i> Chargement des actualités...</div>
+                <div class="loading" style="grid-column:1/-1; text-align:center; padding:40px; color:var(--text-muted);"><i class="fas fa-spinner fa-spin"></i> <span data-i18n="news.loading">Chargement...</span></div>
             </div>
         </div>
     </section>
@@ -383,7 +383,7 @@
                 <p class="section-desc" data-i18n="events.desc">Meetups, conférences et hackathons à travers l'Algérie</p>
             </div>
             <div class="events-grid" id="homeEventsGrid">
-                <div class="loading" style="grid-column:1/-1; text-align:center; padding:40px; color:var(--text-muted);"><i class="fas fa-spinner fa-spin"></i> Chargement des événements...</div>
+                <div class="loading" style="grid-column:1/-1; text-align:center; padding:40px; color:var(--text-muted);"><i class="fas fa-spinner fa-spin"></i> <span data-i18n="events.loading">Chargement des événements...</span></div>
             </div>
         </div>
     </section>
@@ -509,31 +509,45 @@
         const courseIconMap = { 'Réseaux': 'fas fa-network-wired', 'Système': 'fab fa-linux', 'Cybersécurité': 'fas fa-shield-alt', 'Développement': 'fas fa-code', 'Data': 'fas fa-brain', 'Design': 'fas fa-palette', 'Gestion': 'fas fa-tasks' };
         const courseColorMap = { 'Réseaux': 'blue', 'Système': 'green', 'Cybersécurité': 'red', 'Développement': 'purple', 'Data': 'teal', 'Design': 'amber', 'Gestion': 'blue' };
         const eventIcons = { meetup: 'fas fa-users', workshop: 'fas fa-tools', conference: 'fas fa-microphone', hackathon: 'fas fa-terminal', webinar: 'fas fa-video' };
-        const monthNames = ['Jan','Fév','Mar','Avr','Mai','Jun','Jul','Aoû','Sep','Oct','Nov','Déc'];
-        const badgeLabels = { tech: 'Technologie', community: 'Communauté', event: 'Événement', alert: 'Alerte' };
-        const typeLabels = { meetup: 'Meetup', workshop: 'Workshop', conference: 'Conférence', hackathon: 'Hackathon', webinar: 'Webinar' };
+        const monthNames = t('common.monthShort');
+        const badgeLabels = { tech: t('news.badgeTech'), community: t('news.badgeCommunity'), event: t('news.badgeEvent'), alert: t('news.badgeAlert') };
+        const typeLabels = { meetup: t('news.typeMeetup'), workshop: t('news.typeWorkshop'), conference: t('news.typeConference'), hackathon: t('news.typeHackathon'), webinar: t('news.typeWebinar') };
 
         function timeAgo(dateStr) {
             const diff = Date.now() - new Date(dateStr).getTime();
             const mins = Math.floor(diff / 60000);
-            if (mins < 60) return mins + 'min';
+            if (mins < 60) return mins + t('common.min');
             const hrs = Math.floor(mins / 60);
-            if (hrs < 24) return hrs + 'h';
+            if (hrs < 24) return hrs + t('common.hr');
             const days = Math.floor(hrs / 24);
-            return days + 'j';
+            return days + t('common.day');
         }
 
-        // 1. Load Stats
-        try {
-            const [users, posts, jobs] = await Promise.all([
-                Auth.getClient().from('profiles').select('*', { count: 'exact', head: true }),
-                Auth.getClient().from('forum_posts').select('*', { count: 'exact', head: true }),
-                Auth.getClient().from('job_offers').select('*', { count: 'exact', head: true }).eq('is_active', true)
-            ]);
-            document.getElementById('statMembers').textContent = (users.count || 0).toLocaleString();
-            document.getElementById('statPosts').textContent = (posts.count || 0).toLocaleString();
-            document.getElementById('statJobs').textContent = (jobs.count || 0).toLocaleString();
-        } catch(e) { console.error('Stats error:', e); }
+        // 1. Load Stats — chaque compteur est isolé : si une requête échoue,
+        // les autres affichent quand même les vraies données.
+        const safeCount = async (q) => {
+            try {
+                const { count } = await q();
+                return count || 0;
+            } catch (e) { console.error('Stats error:', e.message); return 0; }
+        };
+
+        const [members, discussions, jobs] = await Promise.all([
+            safeCount(() => Auth.getClient().from('profiles').select('*', { count: 'exact', head: true })),
+            safeCount(() => Auth.getClient().from('forum_posts').select('*', { count: 'exact', head: true })),
+            safeCount(() => Auth.getClient().from('job_offers').select('*', { count: 'exact', head: true }).eq('is_active', true))
+        ]);
+        document.getElementById('statMembers').textContent = members.toLocaleString();
+        document.getElementById('statPosts').textContent = discussions.toLocaleString();
+        document.getElementById('statJobs').textContent = (jobs || 0).toLocaleString();
+
+        // Repli : si la colonne is_active n'existe pas, compter toutes les offres
+        if (!jobs) {
+            try {
+                const { count } = await Auth.getClient().from('job_offers').select('*', { count: 'exact', head: true });
+                document.getElementById('statJobs').textContent = (count || 0).toLocaleString();
+            } catch (e2) { console.error('Stats fallback error:', e2.message); }
+        }
 
         // 2. Load Forum Preview (3 latest posts)
         try {
@@ -559,7 +573,7 @@
                             <div class="post-meta">
                                 <span class="post-author">
                                     <div class="author-avatar" style="background:rgba(var(--${catColor}-rgb,99,102,241),0.15);color:var(--${catColor},var(--primary))">${authorInit}</div>
-                                    ${p.author?.full_name || 'Anonyme'}
+                                    ${p.author?.full_name || t('common.anonymous')}
                                 </span>
                                 <span><i class="fas fa-comment"></i> ${p.reply_count || 0}</span>
                                 <span><i class="fas fa-eye"></i> ${p.views || 0}</span>
@@ -568,7 +582,7 @@
                     </div>`;
                 }).join('');
             } else {
-                el.innerHTML = '<div class="empty-state" style="padding:20px"><i class="fas fa-comments"></i><p>Aucun post pour le moment</p></div>';
+                el.innerHTML = '<div class="empty-state" style="padding:20px"><i class="fas fa-comments"></i><p>' + t('forum.noPosts') + '</p></div>';
             }
         } catch(e) { console.error('Forum preview error:', e); }
 
@@ -593,7 +607,7 @@
                                 <div class="company-logo ${colors[i % 4]}">${(j.company || 'T')[0]}</div>
                                 <div><strong>${j.company}</strong><span>${j.location}</span></div>
                             </div>
-                            <span class="job-type ${j.job_type}">${j.job_type === 'remote' ? 'Remote' : j.job_type === 'hybrid' ? 'Hybride' : 'Sur site'}</span>
+                            <span class="job-type ${j.job_type}">${j.job_type === 'remote' ? t('jobs.remote') : j.job_type === 'hybrid' ? t('jobs.hybrid') : t('jobs.onsite')}</span>
                         </div>
                         <h3 class="job-title">${j.title}</h3>
                         <div class="job-tags">${(j.requirements || []).slice(0, 3).map(r => `<span>${r}</span>`).join('')}</div>
@@ -604,7 +618,7 @@
                     </div>`;
                 }).join('');
             } else {
-                grid.innerHTML = '<div class="empty-state" style="grid-column:1/-1;padding:40px"><i class="fas fa-briefcase"></i><p>Aucune offre pour le moment</p></div>';
+                grid.innerHTML = '<div class="empty-state" style="grid-column:1/-1;padding:40px"><i class="fas fa-briefcase"></i><p>' + t('jobs.empty') + '</p></div>';
             }
         } catch(e) { console.error('Jobs preview error:', e); }
 
@@ -620,7 +634,7 @@
             const grid = document.getElementById('homeTrainingGrid');
             if (courses && courses.length > 0) {
                 grid.innerHTML = courses.map(c => {
-                    const levelLabel = c.level === 'beginner' ? 'Débutant' : c.level === 'intermediate' ? 'Intermédiaire' : 'Avancé';
+                    const levelLabel = c.level === 'beginner' ? t('training.beginner') : c.level === 'intermediate' ? t('training.intermediate') : t('training.advanced');
                     return `
                     <div class="course-card" onclick="window.location.href='training.html'" style="cursor:pointer">
                         <div class="course-image">
@@ -641,7 +655,7 @@
                     </div>`;
                 }).join('');
             } else {
-                grid.innerHTML = '<div class="empty-state" style="grid-column:1/-1;padding:40px"><i class="fas fa-graduation-cap"></i><p>Aucune formation pour le moment</p></div>';
+                grid.innerHTML = '<div class="empty-state" style="grid-column:1/-1;padding:40px"><i class="fas fa-graduation-cap"></i><p>' + t('training.empty') + '</p></div>';
             }
         } catch(e) { console.error('Training preview error:', e); }
 
@@ -663,14 +677,14 @@
                             <h${i === 0 ? '3' : '4'}>${n.title}</h${i === 0 ? '3' : '4'}>
                             <p>${(n.summary || n.content || '').substring(0, 120)}...</p>
                             <div class="news-meta">
-                                ${n.author_name ? `<span>Par <strong>${n.author_name}</strong></span>` : ''}
+                                ${n.author_name ? `<span>${t('common.by')} <strong>${n.author_name}</strong></span>` : ''}
                                 <span>${timeAgo(n.created_at)}</span>
                             </div>
                         </div>
                     </div>
                 `).join('');
             } else {
-                grid.innerHTML = '<div class="empty-state" style="grid-column:1/-1;padding:40px"><i class="fas fa-newspaper"></i><p>Aucune actualité pour le moment</p></div>';
+                grid.innerHTML = '<div class="empty-state" style="grid-column:1/-1;padding:40px"><i class="fas fa-newspaper"></i><p>' + t('news.empty') + '</p></div>';
             }
         } catch(e) { console.error('News preview error:', e); }
 
@@ -698,13 +712,13 @@
                             <p>${(e.description || '').substring(0, 100)}...</p>
                             <div class="event-meta">
                                 ${e.location ? `<span><i class="fas fa-map-marker-alt"></i> ${e.location}</span>` : ''}
-                                ${e.max_participants ? `<span><i class="fas fa-users"></i> ${e.max_participants} places</span>` : ''}
+                                ${e.max_participants ? `<span><i class="fas fa-users"></i> ${e.max_participants} ${t('events.places')}</span>` : ''}
                             </div>
                         </div>
                     </div>`;
                 }).join('');
             } else {
-                grid.innerHTML = '<div class="empty-state" style="grid-column:1/-1;padding:40px"><i class="fas fa-calendar-alt"></i><p>Aucun événement pour le moment</p></div>';
+                grid.innerHTML = '<div class="empty-state" style="grid-column:1/-1;padding:40px"><i class="fas fa-calendar-alt"></i><p>' + t('events.empty') + '</p></div>';
             }
         } catch(e) { console.error('Events preview error:', e); }
     })();

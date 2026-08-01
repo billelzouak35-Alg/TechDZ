@@ -1,9 +1,9 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="fr" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Actualités IT — TechDZ</title>
+    <title data-i18n="title.news">Actualités IT — TechDZ</title>
     <link rel="icon" type="image/svg+xml" href="logo.svg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -220,7 +220,7 @@
                 document.getElementById('authLoggedIn').style.display = 'flex';
             }
 
-            const badgeLabels = { tech: 'Technologie', community: 'Communauté', event: 'Événement', alert: 'Alerte' };
+            const badgeLabels = { tech: t('news.badgeTech'), community: t('news.badgeCommunity'), event: t('news.badgeEvent'), alert: t('news.badgeAlert') };
             let currentCat = '';
 
             async function loadNews() {
@@ -230,12 +230,12 @@
 
                 if (error) {
                     console.error('Error loading news:', error);
-                    list.innerHTML = `<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><p>Erreur: ${error.message}</p></div>`;
+                    list.innerHTML = `<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><p>${t('common.error')}: ${error.message}</p></div>`;
                     return;
                 }
 
                 if (!data || data.length === 0) {
-                    list.innerHTML = '<div class="empty-state"><i class="fas fa-newspaper"></i><p>Aucune actualité pour le moment</p></div>';
+                    list.innerHTML = '<div class="empty-state"><i class="fas fa-newspaper"></i><p>' + t('news.empty') + '</p></div>';
                     return;
                 }
 
@@ -248,10 +248,10 @@
                         <h3>${n.title}</h3>
                         <p>${n.content}</p>
                         <div class="news-card-footer">
-                            <span><i class="fas fa-user"></i> ${n.author_name || 'Anonyme'}</span>
-                            <span><i class="fas fa-heart"></i> ${n.likes_count || 0} likes</span>
-                            <span><i class="fas fa-comment"></i> ${n.comments_count || 0} commentaires</span>
-                            ${n.external_link ? `<a href="${n.external_link}" target="_blank" style="color:var(--primary)"><i class="fas fa-external-link-alt"></i> Lien</a>` : ''}
+                            <span><i class="fas fa-user"></i> ${n.author_name || t('common.anonymous')}</span>
+                            <span><i class="fas fa-heart"></i> ${n.likes_count || 0} ${t('news.likes')}</span>
+                            <span><i class="fas fa-comment"></i> ${n.comments_count || 0} ${t('news.comments')}</span>
+                            ${n.external_link ? `<a href="${n.external_link}" target="_blank" style="color:var(--primary)"><i class="fas fa-external-link-alt"></i> ${t('news.link')}</a>` : ''}
                         </div>
                     </div>
                 `).join('');
@@ -260,7 +260,7 @@
             async function loadPopular() {
                 const { data } = await DB.getNewsArticles({ category: undefined });
                 const el = document.getElementById('popularNews');
-                if (!data || data.length === 0) { el.innerHTML = '<div style="font-size:0.85rem;color:var(--text-muted)">Aucun article encore</div>'; return; }
+                if (!data || data.length === 0) { el.innerHTML = '<div style="font-size:0.85rem;color:var(--text-muted)">' + t('news.noneYet') + '</div>'; return; }
                 const sorted = [...data].sort((a, b) => (b.likes_count || 0) - (a.likes_count || 0)).slice(0, 5);
                 el.innerHTML = sorted.map((n, i) => `
                     <a class="sidebar-link" href="#" onclick="event.preventDefault()">
@@ -275,9 +275,9 @@
                 const { data: posts } = await DB.getForumPosts();
                 const { data: jobs } = await DB.getJobOffers();
                 document.getElementById('communityStats').innerHTML = `
-                    <div style="display:flex;justify-content:space-between;font-size:0.85rem"><span>Membres</span><strong>${users?.length || 0}</strong></div>
-                    <div style="display:flex;justify-content:space-between;font-size:0.85rem"><span>Posts forum</span><strong>${posts?.length || 0}</strong></div>
-                    <div style="display:flex;justify-content:space-between;font-size:0.85rem"><span>Offres d'emploi</span><strong>${jobs?.length || 0}</strong></div>
+                    <div style="display:flex;justify-content:space-between;font-size:0.85rem"><span>${t('news.members')}</span><strong>${users?.length || 0}</strong></div>
+                    <div style="display:flex;justify-content:space-between;font-size:0.85rem"><span>${t('news.forumPosts')}</span><strong>${posts?.length || 0}</strong></div>
+                    <div style="display:flex;justify-content:space-between;font-size:0.85rem"><span>${t('news.jobOffers')}</span><strong>${jobs?.length || 0}</strong></div>
                 `;
             }
 

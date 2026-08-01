@@ -403,22 +403,64 @@ const DB = {
   async getAdminStats() {
     const client = this.getClient();
 
-    const [users, posts, jobs, courses, events, news] = await Promise.all([
-      client.from('profiles').select('*', { count: 'exact', head: true }),
-      client.from('forum_posts').select('*', { count: 'exact', head: true }),
-      client.from('job_offers').select('*', { count: 'exact', head: true }).eq('is_active', true),
-      client.from('training_courses').select('*', { count: 'exact', head: true }).eq('is_published', true),
-      client.from('events').select('*', { count: 'exact', head: true }).eq('is_active', true),
-      client.from('news_articles').select('*', { count: 'exact', head: true }).eq('is_published', true)
+    // Comptage sûr : chaque requête est isolée — si une colonne/table manque,
+    // les autres statistiques continuent de s'afficher avec les vraies données.
+    const safeCount = async (table, filters = []) => {
+      try {
+        let q = client.from(table).select('*', { count: 'exact', head: true });
+        filters.forEach(([col, val]) => { q = q.eq(col, val); });
+        const { count } = await q;
+        return count || 0;
+      } catch (e) {
+        console.error(`getAdminStats: count ${table}:`, e.message);
+        return 0;
+      }
+    };
+
+    const safeSum = async (table, column) => {
+      try {
+        const { data } = await client.from(table).select(column);
+        return (data || []).reduce((s, r) => s + (r[column] || 0), 0);
+      } catch (e) {
+        console.error(`getAdminStats: sum ${table}.${column}:`, e.message);
+        return 0;
+      }
+    };
+
+    const [users, cities, posts, replies, jobsActive, jobsTotal, coursesPub, coursesTotal, enrollments, eventsActive, eventsTotal, registrations, newsPub, newsTotal, views] = await Promise.all([
+      safeCount('profiles'),
+      this.getMemberCities().then(r => (r.data || []).length).catch(() => 0),
+      safeCount('forum_posts'),
+      safeCount('forum_replies'),
+      safeCount('job_offers', [['is_active', true]]),
+      safeCount('job_offers'),
+      safeCount('training_courses', [['is_published', true]]),
+      safeCount('training_courses'),
+      safeSum('training_courses', 'enrollment_count'),
+      safeCount('events', [['is_active', true]]),
+      safeCount('events'),
+      safeSum('events', 'registration_count'),
+      safeCount('news_articles', [['is_published', true]]),
+      safeCount('news_articles'),
+      safeSum('news_articles', 'views')
     ]);
 
     return {
-      users: users.count || 0,
-      posts: posts.count || 0,
-      jobs: jobs.count || 0,
-      courses: courses.count || 0,
-      events: events.count || 0,
-      news: news.count || 0
+      users,
+      cities,
+      posts,
+      replies,
+      jobsActive,
+      jobsTotal,
+      coursesPublished: coursesPub,
+      coursesTotal,
+      courseEnrollments: enrollments,
+      eventsActive,
+      eventsTotal,
+      eventRegistrations: registrations,
+      newsPublished: newsPub,
+      newsTotal,
+      newsViews: views
     };
   },
 
@@ -430,7 +472,7 @@ const DB = {
       .order('created_at', { ascending: false })
       .range((page - 1) * limit, page * limit - 1);
 
-    if (search) query = query.or(`full_name.ilike.%${search}%,job_title.ilike.%${search}%`);
+    if (search) query = query.or(`full_name.ilike.%${search}%,job_title.ilike.%${search}%,email.ilike.%${search}%`);
 
     const { data, error, count } = await query;
     return { data, error, count };
@@ -444,6 +486,25 @@ const DB = {
       .eq('id', userId)
       .select()
       .single();
+    return { data, error };
+  },
+
+  async updateUserProfile(userId, updates) {
+    const client = this.getClient();
+    const { data, error } = await client
+      .from('profiles')
+      .update(updates)
+      .eq('id', userId)
+      .select()
+      .single();
+    return { data, error };
+  },
+
+  // Suppression complète (profil + compte auth) via la fonction
+  // admin_delete_user (voir supabase-admin-setup.sql)
+  async deleteUserFull(userId) {
+    const client = this.getClient();
+    const { data, error } = await client.rpc('admin_delete_user', { target: userId });
     return { data, error };
   },
 

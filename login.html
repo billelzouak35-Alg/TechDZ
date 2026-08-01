@@ -1,9 +1,9 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="fr" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Connexion — TechDZ</title>
+    <title data-i18n="title.login">Connexion — TechDZ</title>
     <link rel="icon" type="image/svg+xml" href="logo.svg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -176,15 +176,15 @@
 </head>
 <body>
     <a href="index.html" class="back-link">
-        <i class="fas fa-arrow-left"></i> Retour
+        <i class="fas fa-arrow-left"></i> <span data-i18n="common.back">Retour</span>
     </a>
 
     <div class="auth-page">
         <div class="auth-card">
             <div class="auth-logo">
                 <img src="logo.svg" alt="TechDZ">
-                <h1>Bienvenue</h1>
-                <p>Connectez-vous à votre compte</p>
+                <h1 data-i18n="common.welcome">Bienvenue</h1>
+                <p data-i18n="login.title">Connectez-vous à votre compte</p>
             </div>
 
             <div class="alert error" id="alertError"></div>
@@ -197,31 +197,56 @@
                     <span class="error-text"></span>
                 </div>
                 <div class="form-group" id="passwordGroup">
-                    <label for="password">Mot de passe</label>
+                    <label for="password" data-i18n="common.password">Mot de passe</label>
                     <input type="password" id="password" placeholder="••••••••" required minlength="6">
                     <span class="error-text"></span>
                 </div>
+                <div id="hcaptcha-widget"></div>
                 <button type="submit" class="btn btn-primary btn-lg btn-full" id="loginBtn">
-                    <i class="fas fa-sign-in-alt"></i> Se connecter
+                    <i class="fas fa-sign-in-alt"></i> <span data-i18n="common.signin">Se connecter</span>
                 </button>
-                <a href="reset-password.html" class="forgot-link">Mot de passe oublié ?</a>
+                <a href="reset-password.html" class="forgot-link" data-i18n="login.forgot">Mot de passe oublié ?</a>
             </form>
 
-            <div class="divider">ou</div>
+            <div class="divider" data-i18n="common.or">ou</div>
 
-            <button class="btn-google" id="googleBtn" aria-label="Se connecter avec Google" title="Se connecter avec Google">
+            <button class="btn-google" id="googleBtn" data-i18n-aria="common.signinGoogle">
                 <svg width="22" height="22" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
             </button>
 
             <div class="auth-footer">
-                Pas encore de compte ? <a href="register.html">Créer un compte</a>
+                <span data-i18n="login.noAccount">Pas encore de compte ?</span> <a href="register.html" data-i18n="login.createAccount">Créer un compte</a>
             </div>
         </div>
     </div>
 
+    <script src="https://js.hcaptcha.com/1/api.js" async defer></script>
     <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
     <script src="config.js"></script>
     <script src="translations.js"></script>
+    <script>
+        (function () {
+            const params = new URLSearchParams(window.location.search);
+            const lang = params.get('lang') || localStorage.getItem('techdz-lang') || 'fr';
+            localStorage.setItem('techdz-lang', lang);
+            const tr = window.translations;
+            const data = (tr && tr[lang]) || (tr && tr.fr) || {};
+            if (lang === 'ar') document.documentElement.setAttribute('dir', 'rtl');
+            document.documentElement.setAttribute('lang', lang);
+            const apply = (attr, set) => document.querySelectorAll('[' + attr + ']').forEach(el => {
+                const k = el.getAttribute(attr);
+                if (data[k]) set(el, data[k]);
+            });
+            apply('data-i18n', (el, v) => el.textContent = v);
+            apply('data-i18n-placeholder', (el, v) => el.placeholder = v);
+            apply('data-i18n-title', (el, v) => el.title = v);
+            apply('data-i18n-aria', (el, v) => el.setAttribute('aria-label', v));
+            window.t = function (key, fb) {
+                const v = data[key];
+                return (v !== undefined && v !== null && v !== '') ? v : (fb !== undefined ? fb : key);
+            };
+        })();
+    </script>
     <script src="auth.js"></script>
     <script>
         Auth.init();
@@ -248,24 +273,70 @@
             alertError.style.display = 'none';
         }
 
+        // ==========================================
+        // hCaptcha — protection anti-bots
+        // ==========================================
+        let captchaToken = null;
+        window.hcaptchaCallback = (token) => { captchaToken = token; };
+        window.hcaptchaExpiredCallback = () => { captchaToken = null; };
+
+        // Le captcha n'est exigé que si une vraie Site Key est configurée
+        function hcaptchaEnabled() {
+            return !!window.HCAPTCHA_SITE_KEY && !window.HCAPTCHA_SITE_KEY.startsWith('VOTRE_');
+        }
+
+        // Attendre le chargement de l'API hCaptcha (script async/defer)
+        function waitForHcaptcha(timeoutMs) {
+            return new Promise((resolve) => {
+                const start = Date.now();
+                const check = () => {
+                    if (window.hcaptcha) return resolve(true);
+                    if (Date.now() - start > timeoutMs) return resolve(false);
+                    setTimeout(check, 100);
+                };
+                check();
+            });
+        }
+
+        async function initHcaptcha() {
+            if (!hcaptchaEnabled()) return;
+            const loaded = await waitForHcaptcha(5000);
+            if (!loaded) {
+                showError('Impossible de charger le captcha de sécurité. Rechargez la page ou réessayez plus tard.');
+                return;
+            }
+            try {
+                hcaptcha.render('hcaptcha-widget', {
+                    sitekey: window.HCAPTCHA_SITE_KEY,
+                    callback: 'hcaptchaCallback',
+                    'expired-callback': 'hcaptchaExpiredCallback'
+                });
+            } catch (e) {
+                console.error('Erreur de rendu hCaptcha :', e);
+                showError('Impossible de charger le captcha de sécurité. Rechargez la page ou réessayez plus tard.');
+            }
+        }
+
+        initHcaptcha();
+
         // Email non confirmé : message + bouton pour renvoyer le lien de confirmation
         function showUnconfirmed(email) {
             alertError.innerHTML =
-                'Votre email n\'est pas encore confirmé. Vérifiez votre boîte mail.' +
-                '<button type="button" class="btn btn-outline" id="resendBtn" style="margin-top:12px;width:100%;">Renvoyer l\'email de confirmation</button>';
+                t('login.unconfirmed') +
+                '<button type="button" class="btn btn-outline" id="resendBtn" style="margin-top:12px;width:100%;">' + t('login.resend') + '</button>';
             alertError.style.display = 'block';
             alertSuccess.style.display = 'none';
 
             document.getElementById('resendBtn').addEventListener('click', async () => {
                 const btn = document.getElementById('resendBtn');
                 btn.disabled = true;
-                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Envoi...';
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> ' + t('login.sending');
                 const { error } = await Auth.resendConfirmation(email);
                 if (error) {
-                    alertError.textContent = 'Impossible de renvoyer l\'email : ' + (error.message || 'erreur inconnue');
+                    alertError.textContent = t('login.resendFailed') + ' : ' + (error.message || t('common.unknown'));
                     alertError.style.display = 'block';
                 } else {
-                    alertError.textContent = 'Email de confirmation renvoyé. Vérifiez votre boîte mail (pensez aux spams).';
+                    alertError.textContent = t('login.resendSent');
                     alertError.style.display = 'block';
                 }
             });
@@ -276,34 +347,47 @@
             const email = document.getElementById('email').value.trim();
             const password = document.getElementById('password').value;
 
-            loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Connexion...';
+            // hCaptcha requis mais absent → bloquer la soumission
+            if (hcaptchaEnabled() && !captchaToken) {
+                showError('Veuillez compléter le captcha');
+                return;
+            }
+
+            loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> ' + t('common.connecting');
             loginBtn.disabled = true;
 
-            const { data, error } = await Auth.signIn(email, password);
+            const { data, error } = await Auth.signIn(email, password, captchaToken);
             console.log('Sign in result:', { data, error });
 
             if (error) {
-                const msg = error.message || JSON.stringify(error) || 'Erreur inconnue';
+                const msg = error.message || JSON.stringify(error) || t('common.unknown');
                 if (msg.includes('Email not confirmed') || error.code === 'email_not_confirmed') {
                     showUnconfirmed(email);
                 } else if (msg.includes('Invalid login') || msg.includes('invalid')) {
-                    showError('Email ou mot de passe incorrect');
+                    showError(t('login.invalid'));
                 } else if (msg.includes('not initialized')) {
-                    showError('Erreur de configuration — contactez l\'administrateur');
+                    showError(t('login.configError'));
                 } else {
                     showError(msg);
                 }
-                loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Se connecter';
+                // Token consommé ou invalide → régénérer le captcha
+                captchaToken = null;
+                Auth.resetCaptcha();
+                loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> ' + t('common.signin');
                 loginBtn.disabled = false;
             } else if (data.user && !Auth.isEmailConfirmed(data.user)) {
                 // Session créée malgré tout → la détruire et bloquer l'accès
                 await Auth.signOut(null);
                 showUnconfirmed(email);
-                loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Se connecter';
+                captchaToken = null;
+                Auth.resetCaptcha();
+                loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> ' + t('common.signin');
                 loginBtn.disabled = false;
             } else {
-                showSuccess('Connexion réussie ! Redirection...');
+                showSuccess(t('login.success'));
                 localStorage.setItem('techdz-user', JSON.stringify(data.user));
+                captchaToken = null;
+                Auth.resetCaptcha();
                 setTimeout(() => window.location.href = 'index.html', 1000);
             }
         });

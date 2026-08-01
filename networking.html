@@ -1,9 +1,9 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="fr" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Réseautage — TechDZ</title>
+    <title data-i18n="title.networking">Réseautage — TechDZ</title>
     <link rel="icon" type="image/svg+xml" href="logo.svg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -256,16 +256,16 @@
                 const { data, error, count } = await DB.getMembers({ search, city });
 
                 if (error) {
-                    grid.innerHTML = `<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><p>Erreur: ${error.message}</p></div>`;
+                    grid.innerHTML = `<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><p>${t('common.error')}: ${error.message}</p></div>`;
                     countEl.textContent = '';
                     return;
                 }
 
-                const noun = (count || 0) > 1 ? ' membres trouvés' : ' membre trouvé';
+                const noun = (count || 0) > 1 ? ' ' + t('networking.foundMany') : ' ' + t('networking.foundOne');
                 countEl.textContent = data && data.length > 0 ? `${count || data.length}${noun}` : '';
 
                 if (!data || data.length === 0) {
-                    grid.innerHTML = '<div class="empty-state"><i class="fas fa-users"></i><p>Aucun membre trouvé</p></div>';
+                    grid.innerHTML = '<div class="empty-state"><i class="fas fa-users"></i><p>' + t('networking.empty') + '</p></div>';
                     return;
                 }
 
@@ -273,21 +273,21 @@
                 let filtered = data;
                 if (skill) {
                     filtered = data.filter(m => (m.skills || []).some(s => s.toLowerCase() === skill.toLowerCase()));
-                    countEl.textContent = `${filtered.length}${filtered.length > 1 ? ' membres trouvés' : ' membre trouvé'}`;
+                    countEl.textContent = `${filtered.length}${filtered.length > 1 ? ' ' + t('networking.foundMany') : ' ' + t('networking.foundOne')}`;
                     if (filtered.length === 0) {
-                        grid.innerHTML = '<div class="empty-state"><i class="fas fa-users"></i><p>Aucun membre trouvé avec ce domaine</p></div>';
+                        grid.innerHTML = '<div class="empty-state"><i class="fas fa-users"></i><p>' + t('networking.emptyDomain') + '</p></div>';
                         return;
                     }
                 }
 
                 grid.innerHTML = filtered.map(m => {
-                    const roleLabel = m.role === 'admin' ? 'Admin' : m.role === 'moderator' ? 'Modérateur' : 'Membre';
+                    const roleLabel = m.role === 'admin' ? t('common.admin') : m.role === 'moderator' ? t('common.moderator') : t('common.member');
                     const skills = m.skills || [];
                     return `
                         <div class="member-card">
                             <div class="member-avatar">${getInitials(m.full_name)}</div>
                             <span class="member-role-tag ${m.role || 'member'}">${roleLabel}</span>
-                            <h3>${m.full_name || 'Utilisateur'}</h3>
+                            <h3>${m.full_name || t('common.user')}</h3>
                             <div class="member-job">${m.job_title || ''}</div>
                             ${m.city ? `<div class="member-city"><i class="fas fa-map-marker-alt"></i>${m.city}</div>` : ''}
                             ${skills.length > 0 ? `

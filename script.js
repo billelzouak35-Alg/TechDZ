@@ -29,6 +29,15 @@
   });
 })();
 
+function t(key, fallback) {
+  const tr = window.translations;
+  if (!tr) return fallback !== undefined ? fallback : key;
+  const lang = localStorage.getItem('techdz-lang') || 'fr';
+  const data = tr[lang] || tr.fr || {};
+  const v = data[key];
+  return (v !== undefined && v !== null && v !== '') ? v : (fallback !== undefined ? fallback : key);
+}
+
 function getTranslationUrl(url, lang) {
   const sep = url.includes('?') ? '&' : '?';
   return url + sep + 'lang=' + lang;

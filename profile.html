@@ -1,9 +1,9 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="fr" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mon profil — TechDZ</title>
+    <title data-i18n="title.profile">Mon profil — TechDZ</title>
     <link rel="icon" type="image/svg+xml" href="logo.svg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -542,13 +542,13 @@
             // ==========================================
             function fillProfile(p) {
                 document.getElementById('profileAvatar').childNodes[0].textContent = (p.full_name || 'U')[0].toUpperCase();
-                document.getElementById('profileName').textContent = p.full_name || 'Utilisateur';
-                document.getElementById('profileJob').textContent = p.job_title || 'Informaticien';
-                document.getElementById('profileCity').textContent = p.city || 'Algérie';
+                document.getElementById('profileName').textContent = p.full_name || t('common.user');
+                document.getElementById('profileJob').textContent = p.job_title || t('profile.itSpecialist');
+                document.getElementById('profileCity').textContent = p.city || t('common.algeria');
                 document.getElementById('profileDate').textContent = new Date(p.created_at).toLocaleDateString('fr-FR');
 
                 const roleEl = document.getElementById('profileRole');
-                roleEl.textContent = p.role === 'admin' ? 'Administrateur' : p.role === 'moderator' ? 'Modérateur' : 'Membre';
+                roleEl.textContent = p.role === 'admin' ? t('common.admin') : p.role === 'moderator' ? t('common.moderator') : t('common.member');
                 roleEl.className = `profile-role-badge ${p.role}`;
 
                 // Fill edit form
@@ -589,7 +589,7 @@
 
             editForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
-                saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enregistrement...';
+                saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> ' + t('profile.saving');
                 saveBtn.disabled = true;
                 editAlert.style.display = 'none';
 
@@ -610,16 +610,16 @@
 
                 if (error) {
                     editAlert.className = 'alert-bar error';
-                    editAlert.textContent = 'Erreur: ' + (error.message || JSON.stringify(error));
+                    editAlert.textContent = t('common.error') + ': ' + (error.message || JSON.stringify(error));
                     editAlert.style.display = 'block';
                 } else {
                     editAlert.className = 'alert-bar success';
-                    editAlert.textContent = 'Profil mis a jour avec succes !';
+                    editAlert.textContent = t('profile.saved');
                     editAlert.style.display = 'block';
                     if (data) fillProfile(data);
                 }
 
-                saveBtn.innerHTML = '<i class="fas fa-save"></i> Enregistrer';
+                saveBtn.innerHTML = '<i class="fas fa-save"></i> ' + t('profile.save');
                 saveBtn.disabled = false;
                 setTimeout(() => { editAlert.style.display = 'none'; }, 4000);
             });
@@ -644,15 +644,15 @@
             document.getElementById('updatePasswordBtn').addEventListener('click', async () => {
                 const newPass = document.getElementById('newPassword').value;
                 if (!newPass || newPass.length < 6) {
-                    alert('Le mot de passe doit contenir au moins 6 caractères');
+                    alert(t('common.passwordShort'));
                     return;
                 }
                 const client = Auth.getClient();
                 const { error } = await client.auth.updateUser({ password: newPass });
                 if (error) {
-                    alert('Erreur: ' + error.message);
+                    alert(t('common.error') + ': ' + error.message);
                 } else {
-                    alert('Mot de passe mis à jour !');
+                    alert(t('profile.updated'));
                     document.getElementById('newPassword').value = '';
                 }
             });
@@ -661,8 +661,8 @@
             // Delete Account
             // ==========================================
             document.getElementById('deleteAccountBtn').addEventListener('click', async () => {
-                if (!confirm('Êtes-vous sûr de vouloir supprimer votre compte ? Cette action est irréversible.')) return;
-                if (!confirm('DERNIER AVERTISSEMENT : Toutes vos données seront supprimées. Continuer ?')) return;
+                if (!confirm(t('profile.confirmDelete'))) return;
+                if (!confirm(t('profile.confirmDelete2'))) return;
 
                 await DB.deleteUser(user.id);
                 await Auth.signOut();
