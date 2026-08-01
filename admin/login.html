@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin — TechDZ</title>
+    <title data-i18n="admin.loginTitle">Admin — TechDZ</title>
     <link rel="icon" type="image/svg+xml" href="../logo.svg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -16,31 +16,61 @@
         <div class="login-card">
             <div class="login-header">
                 <img src="../logo.svg" alt="TechDZ" height="32">
-                <h1>Administration</h1>
-                <p>Connectez-vous pour gérer la plateforme</p>
+                <h1 data-i18n="admin.loginHeading">Administration</h1>
+                <p data-i18n="admin.loginSub">Connectez-vous pour gérer la plateforme</p>
             </div>
             <div class="alert error" id="alertError"></div>
             <form class="login-form" id="loginForm">
                 <div class="form-group">
-                    <label for="email">Email</label>
+                    <label for="email"><span data-i18n="admin.email">Email</span></label>
                     <input type="email" id="email" placeholder="admin@techdz.com" required>
                 </div>
                 <div class="form-group">
-                    <label for="password">Mot de passe</label>
+                    <label for="password"><span data-i18n="common.password">Mot de passe</span></label>
                     <input type="password" id="password" placeholder="••••••••" required>
                 </div>
                 <button type="submit" class="btn btn-primary btn-full" id="loginBtn">
-                    <i class="fas fa-sign-in-alt"></i> Se connecter
+                    <i class="fas fa-sign-in-alt"></i> <span data-i18n="common.signin">Se connecter</span>
                 </button>
             </form>
             <div class="login-footer">
-                <a href="../index.html"><i class="fas fa-arrow-left"></i> Retour au site</a>
+                <a href="../index.html"><i class="fas fa-arrow-left"></i> <span data-i18n="admin.backToSite">Retour au site</span></a>
+                <div style="display:flex; gap:8px; justify-content:center; margin-top:12px; font-size:0.8rem;">
+                    <a href="login.html?lang=fr" style="color:var(--text-muted); text-decoration:none;">FR</a>
+                    <a href="login.html?lang=en" style="color:var(--text-muted); text-decoration:none;">EN</a>
+                    <a href="login.html?lang=ar" style="color:var(--text-muted); text-decoration:none;">AR</a>
+                </div>
             </div>
         </div>
     </div>
 
     <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
     <script src="../config.js"></script>
+    <script src="../translations.js"></script>
+    <script>
+        (function () {
+            const params = new URLSearchParams(window.location.search);
+            const lang = params.get('lang') || localStorage.getItem('techdz-lang') || 'fr';
+            localStorage.setItem('techdz-lang', lang);
+            window.__lang = lang;
+            const tr = window.translations;
+            const data = (tr && tr[lang]) || (tr && tr.fr) || {};
+            if (lang === 'ar') document.documentElement.setAttribute('dir', 'rtl');
+            document.documentElement.setAttribute('lang', lang);
+            const apply = (attr, set) => document.querySelectorAll('[' + attr + ']').forEach(el => {
+                const k = el.getAttribute(attr);
+                if (data[k]) set(el, data[k]);
+            });
+            apply('data-i18n', (el, v) => el.textContent = v);
+            apply('data-i18n-placeholder', (el, v) => el.placeholder = v);
+            apply('data-i18n-title', (el, v) => el.title = v);
+            apply('data-i18n-aria', (el, v) => el.setAttribute('aria-label', v));
+            window.t = function (key, fb) {
+                const v = data[key];
+                return (v !== undefined && v !== null && v !== '') ? v : (fb !== undefined ? fb : key);
+            };
+        })();
+    </script>
     <script src="../auth.js"></script>
     <script>
         Auth.init();
@@ -62,26 +92,26 @@
             const email = document.getElementById('email').value.trim();
             const password = document.getElementById('password').value;
 
-            loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Connexion...';
+            loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> ' + t('admin.connecting');
             loginBtn.disabled = true;
             alertError.style.display = 'none';
 
             const { data, error } = await Auth.signIn(email, password);
 
             if (error) {
-                alertError.textContent = error.message.includes('Invalid login') ? 'Email ou mot de passe incorrect' : error.message;
+                alertError.textContent = error.message.includes('Invalid login') ? t('admin.loginError') : error.message;
                 alertError.style.display = 'block';
-                loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Se connecter';
+                loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> ' + t('common.signin');
                 loginBtn.disabled = false;
                 return;
             }
 
             const isAdmin = await Auth.isAdmin(data.user.id);
             if (!isAdmin) {
-                alertError.textContent = "Vous n'avez pas les droits d'administration";
+                alertError.textContent = t('admin.notAdmin');
                 alertError.style.display = 'block';
                 await Auth.signOut();
-                loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Se connecter';
+                loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> ' + t('common.signin');
                 loginBtn.disabled = false;
                 return;
             }

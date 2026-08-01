@@ -337,7 +337,25 @@ tbody tr:last-child td { border-bottom: none; }
   transition: all 0.2s;
 }
 .actions-cell button:hover { background: rgba(59,130,246,0.1); color: var(--primary); }
+.actions-cell button.edit:hover { background: rgba(16,185,129,0.1); color: var(--secondary); }
 .actions-cell button.delete:hover { background: rgba(239,68,68,0.1); color: var(--red); }
+
+/* Sélecteur de rôle (tableau utilisateurs) */
+.role-select {
+  padding: 4px 10px;
+  border-radius: 10px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  cursor: pointer;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  appearance: none;
+}
+.role-select.admin { background: rgba(239,68,68,0.1); color: var(--red); border-color: rgba(239,68,68,0.2); }
+.role-select.moderator { background: rgba(245,158,11,0.1); color: var(--amber); border-color: rgba(245,158,11,0.2); }
+.role-select.member { background: rgba(59,130,246,0.1); color: var(--primary); border-color: rgba(59,130,246,0.2); }
+.role-select:disabled { opacity: 0.5; cursor: not-allowed; }
 
 /* Pagination */
 .table-pagination {
@@ -363,6 +381,8 @@ tbody tr:last-child td { border-bottom: none; }
 }
 .pagination-btns button:hover { border-color: var(--primary); color: var(--primary); }
 .pagination-btns button.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+.pagination-btns button:disabled { opacity: 0.4; cursor: not-allowed; }
+.pagination-btns button:disabled:hover { border-color: var(--border-color); color: var(--text-secondary); }
 
 /* Hidden sections */
 .admin-section { display: none; }
