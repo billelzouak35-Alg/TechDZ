@@ -70,11 +70,13 @@ const Auth = {
   },
 
   // Renvoyer l'email de confirmation
-  async resendConfirmation(email) {
+  async resendConfirmation(email, captchaToken) {
     try {
       const client = this.getClient();
       const options = {};
       if (window.APP_URL) options.emailRedirectTo = this.authCallbackUrl();
+      // Token hCaptcha (requis si le captcha est activé côté Supabase)
+      if (captchaToken) options.captchaToken = captchaToken;
       const { data, error } = await client.auth.resend({
         type: 'signup',
         email,
@@ -94,14 +96,15 @@ const Auth = {
   // Demander un email de réinitialisation de mot de passe
   // Le lien de l'email mène vers change-password.html (URL à ajouter
   // dans les Redirect URLs du dashboard Supabase)
-  async requestPasswordReset(email) {
+  async requestPasswordReset(email, captchaToken) {
     try {
       const client = this.getClient();
       const lang = localStorage.getItem('techdz-lang');
       const redirectTo = window.APP_URL + 'change-password.html' + (lang ? '?lang=' + lang : '');
-      const { data, error } = await client.auth.resetPasswordForEmail(email, {
-        redirectTo
-      });
+      const options = { redirectTo };
+      // Token hCaptcha (requis si le captcha est activé côté Supabase)
+      if (captchaToken) options.captchaToken = captchaToken;
+      const { data, error } = await client.auth.resetPasswordForEmail(email, options);
       return { data, error };
     } catch (e) {
       return { data: null, error: { message: e.message } };

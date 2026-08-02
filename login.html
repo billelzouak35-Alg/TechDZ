@@ -329,9 +329,19 @@
 
             document.getElementById('resendBtn').addEventListener('click', async () => {
                 const btn = document.getElementById('resendBtn');
+                // Le renvoi est aussi protégé par le captcha côté Supabase
+                if (hcaptchaEnabled() && !captchaToken) {
+                    alertError.textContent = 'Veuillez compléter le captcha';
+                    alertError.style.display = 'block';
+                    return;
+                }
                 btn.disabled = true;
                 btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> ' + t('login.sending');
-                const { error } = await Auth.resendConfirmation(email);
+                const { error } = await Auth.resendConfirmation(email, captchaToken);
+                captchaToken = null;
+                Auth.resetCaptcha();
+                btn.disabled = false;
+                btn.innerHTML = t('login.resend');
                 if (error) {
                     alertError.textContent = t('login.resendFailed') + ' : ' + (error.message || t('common.unknown'));
                     alertError.style.display = 'block';
