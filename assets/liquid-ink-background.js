@@ -526,4 +526,3 @@ var M=Object.defineProperty,N=(p,t,e)=>t in p?M(p,t,{enumerable:!0,configurable:
   window.addEventListener("pointerdown", B, { passive: true });
   document.addEventListener("visibilitychange", L);
 })();
-
