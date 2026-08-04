@@ -1,5 +1,5 @@
-<!DOCTYPE html>
-<html lang="fr" data-theme="dark">
+﻿<!DOCTYPE html>
+<html lang="fr" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -194,7 +194,7 @@
                     <input type="password" id="confirmPassword" data-i18n-placeholder="register.confirmPlaceholder" placeholder="Répétez le mot de passe" required>
                     <span class="error-text"></span>
                 </div>
-                <div id="hcaptcha-widget"></div>
+                <div id="turnstile-widget"></div>
                 <p class="terms">
                     <span data-i18n="register.terms1">En créant un compte, vous acceptez nos</span> <a href="#" data-i18n="register.termsLink">conditions d'utilisation</a>
                 </p>
@@ -209,7 +209,7 @@
         </div>
     </div>
 
-    <script src="https://js.hcaptcha.com/1/api.js" async defer></script>
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
     <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
     <script src="config.js"></script>
     <script src="translations.js"></script>
@@ -272,23 +272,25 @@
         }
 
         // ==========================================
-        // hCaptcha — protection anti-bots
+        // Cloudflare Turnstile — protection anti-bots
         // ==========================================
         let captchaToken = null;
-        window.hcaptchaCallback = (token) => { captchaToken = token; };
-        window.hcaptchaExpiredCallback = () => { captchaToken = null; };
+        let captchaReady = false;
+        window.__turnstileWidgetId = null;
+        window.turnstileCallback = (token) => { captchaToken = token; };
+        window.turnstileExpiredCallback = () => { captchaToken = null; };
+        window.turnstileErrorCallback = () => { captchaToken = null; captchaReady = false; };
 
         // Le captcha n'est exigé que si une vraie Site Key est configurée
-        function hcaptchaEnabled() {
-            return !!window.HCAPTCHA_SITE_KEY && !window.HCAPTCHA_SITE_KEY.startsWith('VOTRE_');
+        function turnstileEnabled() {
+            return !!window.TURNSTILE_SITE_KEY && !window.TURNSTILE_SITE_KEY.startsWith('VOTRE_');
         }
 
-        // Attendre le chargement de l'API hCaptcha (script async/defer)
-        function waitForHcaptcha(timeoutMs) {
+        function waitForTurnstile(timeoutMs) {
             return new Promise((resolve) => {
                 const start = Date.now();
                 const check = () => {
-                    if (window.hcaptcha) return resolve(true);
+                    if (window.turnstile && typeof window.turnstile.render === 'function') return resolve(true);
                     if (Date.now() - start > timeoutMs) return resolve(false);
                     setTimeout(check, 100);
                 };
@@ -296,26 +298,52 @@
             });
         }
 
-        async function initHcaptcha() {
-            if (!hcaptchaEnabled()) return;
-            const loaded = await waitForHcaptcha(5000);
-            if (!loaded) {
-                showError('Impossible de charger le captcha de sécurité. Rechargez la page ou réessayez plus tard.');
-                return;
-            }
+        // Recharger le script API s'il a échoué (réseau lent, blocage temporaire…)
+        function reloadTurnstileScript() {
+            const s = document.createElement('script');
+            s.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
+            s.async = true;
+            document.head.appendChild(s);
+        }
+
+        function renderTurnstile() {
             try {
-                hcaptcha.render('hcaptcha-widget', {
-                    sitekey: window.HCAPTCHA_SITE_KEY,
-                    callback: 'hcaptchaCallback',
-                    'expired-callback': 'hcaptchaExpiredCallback'
+                window.__turnstileWidgetId = turnstile.render(document.getElementById('turnstile-widget'), {
+                    sitekey: window.TURNSTILE_SITE_KEY,
+                    callback: window.turnstileCallback,
+                    'expired-callback': window.turnstileExpiredCallback,
+                    'error-callback': window.turnstileErrorCallback
                 });
+                captchaReady = true;
             } catch (e) {
-                console.error('Erreur de rendu hCaptcha :', e);
+                console.error('Erreur de rendu Turnstile :', e);
                 showError('Impossible de charger le captcha de sécurité. Rechargez la page ou réessayez plus tard.');
             }
         }
 
-        initHcaptcha();
+        async function initTurnstile() {
+            if (!turnstileEnabled()) return;
+            let loaded = await waitForTurnstile(8000);
+            if (!loaded) reloadTurnstileScript();
+            loaded = await waitForTurnstile(8000);
+            if (!loaded) {
+                // API indisponible (réseau) : on ne bloque pas le formulaire et
+                // on réessaie en arrière-plan dès que l'API est accessible.
+                console.warn('Turnstile API unavailable — captcha temporarily skipped');
+                const retry = setInterval(() => {
+                    if (window.turnstile && typeof window.turnstile.render === 'function') {
+                        clearInterval(retry);
+                        renderTurnstile();
+                        if (alertError.style.display === 'block') alertError.style.display = 'none';
+                    }
+                }, 2000);
+                setTimeout(() => clearInterval(retry), 30000);
+                return;
+            }
+            renderTurnstile();
+        }
+
+        initTurnstile();
 
         // Password strength
         passwordInput.addEventListener('input', (e) => {
@@ -338,8 +366,8 @@
             const password = document.getElementById('password').value;
             const confirmPassword = document.getElementById('confirmPassword').value;
 
-            // hCaptcha requis mais absent → bloquer la soumission
-            if (hcaptchaEnabled() && !captchaToken) {
+            // Turnstile requis mais absent → bloquer la soumission
+            if (turnstileEnabled() && captchaReady && !captchaToken) {
                 showError('Veuillez compléter le captcha');
                 return;
             }

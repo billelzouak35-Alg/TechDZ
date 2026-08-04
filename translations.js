@@ -12,7 +12,7 @@
     "nav.login": "Se connecter",
 
     // Hero
-    "hero.badge": "+5,000 informaticiens nous ont rejoints",
+    "hero.badge": "informaticiens nous ont rejoints",
     "hero.title1": "La communauté IT",
     "hero.title2": "de l'Algérie",
     "hero.desc": "Que vous soyez développeur, administrateur réseau, analyste de données, chef de projet IT, designer UI/UX, administrateur système ou spécialiste en cybersécurité — TechDZ est votre espace pour échanger, apprendre et progresser. Forum, emplois, formations et actualités — tout est ici.",
@@ -346,6 +346,7 @@
     "common.admin": "Administrateur",
     "common.moderator": "Modérateur",
     "common.member": "Membre",
+    "common.since": "Membre depuis",
     "common.algeria": "Algérie",
     "common.back": "Retour",
     "common.signin": "Se connecter",
@@ -668,7 +669,7 @@
     "nav.login": "Login",
 
     // Hero
-    "hero.badge": "+5,000 IT professionals have joined us",
+    "hero.badge": "IT professionals have joined us",
     "hero.title1": "The IT Community",
     "hero.title2": "of Algeria",
     "hero.desc": "Whether you're a developer, network administrator, data analyst, IT project manager, UI/UX designer, system administrator or cybersecurity specialist — TechDZ is your space to exchange, learn and grow. Forum, jobs, training and news — everything is here.",
@@ -1002,6 +1003,7 @@
     "common.admin": "Administrator",
     "common.moderator": "Moderator",
     "common.member": "Member",
+    "common.since": "Member since",
     "common.algeria": "Algeria",
     "common.back": "Back",
     "common.signin": "Sign in",
@@ -1324,7 +1326,7 @@
     "nav.login": "تسجيل الدخول",
 
     // Hero
-    "hero.badge": "+5,000 معلوماتي انضموا إلينا",
+    "hero.badge": "معلوماتي انضموا إلينا",
     "hero.title1": "مجتمع تكنولوجيا المعلومات",
     "hero.title2": "في الجزائر",
     "hero.desc": " سواء كنت مطوراً أو مسؤولاً عن الشبكات أو محلل بيانات أو مدير مشاريع تكنولوجية أو مصمم واجهات أو مسؤولاً عن الأنظمة أو متخصصاً في الأمن السيبراني — TechDZ هو مكانك للتبادل والتعلم والتقدم. المنتدى والوظائف والتكوين والأخبار — كل شيء هنا.",
@@ -1658,6 +1660,7 @@
     "common.admin": "مسؤول",
     "common.moderator": "مشرف",
     "common.member": "عضو",
+    "common.since": "عضو منذ",
     "common.algeria": "الجزائر",
     "common.back": "رجوع",
     "common.signin": "تسجيل الدخول",

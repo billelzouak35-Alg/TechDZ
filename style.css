@@ -639,6 +639,12 @@ input {
   animation: dotPulse 2s ease-in-out infinite;
 }
 
+.badge-count {
+  font-weight: 700;
+  color: var(--secondary);
+  white-space: nowrap;
+}
+
 @keyframes dotPulse {
   0%, 100% { opacity: 1; }
   50% { opacity: 0.4; }
@@ -708,11 +714,29 @@ input {
 /* Hero Visual Cards */
 .hero-visual {
   position: relative;
-  height: 450px;
+  height: 480px;
 }
 
 .hero-card {
   position: absolute;
+  width: 320px;
+  z-index: 1;
+  transform: rotate(var(--rot, 0deg));
+  transition: transform 0.9s cubic-bezier(0.22, 1, 0.36, 1),
+              top 0.9s cubic-bezier(0.22, 1, 0.36, 1),
+              left 0.9s cubic-bezier(0.22, 1, 0.36, 1),
+              right 0.9s cubic-bezier(0.22, 1, 0.36, 1),
+              bottom 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.hero-card:hover { z-index: 8; }
+
+.hero-card.active {
+  z-index: 10;
+  transform: rotate(0deg) scale(1.06);
+}
+
+.hero-card-inner {
   background: var(--glass-bg);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
@@ -720,30 +744,42 @@ input {
   border-radius: var(--radius-lg);
   padding: 20px;
   box-shadow: var(--shadow-lg);
-  transition: transform var(--transition);
+  transition: box-shadow 0.6s ease, opacity 0.6s ease;
+  animation: heroFloat 6s ease-in-out infinite;
 }
 
-.hero-card:hover { transform: translateY(-4px); }
+.hero-card:not(.active):not(:hover) .hero-card-inner {
+  opacity: 0.82;
+  filter: brightness(0.92);
+}
+
+.hero-card.active .hero-card-inner {
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.4), 0 0 50px rgba(99, 102, 241, 0.18);
+}
+
+.hero-card:hover .hero-card-inner { animation-play-state: paused; }
 
 .hero-card-1 {
-  top: 20px;
+  top: 15px;
   left: 0;
-  width: 340px;
-  z-index: 2;
-}
-
-.hero-card-2 {
-  top: 160px;
-  right: 0;
-  width: 280px;
   z-index: 3;
 }
 
+.hero-card-2 {
+  top: 165px;
+  left: 150px;
+  z-index: 2;
+}
+
 .hero-card-3 {
-  bottom: 40px;
-  left: 40px;
-  width: 280px;
+  top: 300px;
+  left: 20px;
   z-index: 1;
+}
+
+@keyframes heroFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
 }
 
 .card-header {
@@ -1771,9 +1807,10 @@ section {
     justify-content: center;
   }
 
-  .hero-card-1 { left: 50%; transform: translateX(-60%); }
-  .hero-card-2 { right: 50%; transform: translateX(60%); }
-  .hero-card-3 { left: 50%; transform: translateX(-40%); }
+  .hero-card-1 { top: 0; left: 50%; transform: translateX(-60%); z-index: 3; }
+  .hero-card-2 { top: 100px; right: 50%; transform: translateX(60%); z-index: 2; }
+  .hero-card-3 { top: 200px; left: 50%; transform: translateX(-40%); z-index: 1; }
+  .hero-card.active { transform: scale(1.08); }
 
   .features-grid { grid-template-columns: repeat(2, 1fr); }
   .training-grid { grid-template-columns: repeat(2, 1fr); }

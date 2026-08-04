@@ -107,7 +107,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const themeToggle = document.getElementById('themeToggle');
   if (themeToggle) {
     const themeIcon = themeToggle.querySelector('i');
-    const savedTheme = localStorage.getItem('techdz-theme') || 'dark';
+    const savedTheme = localStorage.getItem('techdz-theme') || 'light';
     html.setAttribute('data-theme', savedTheme);
     updateThemeIcon(savedTheme);
 

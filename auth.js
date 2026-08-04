@@ -1,4 +1,4 @@
-// ============================================
+﻿// ============================================
 // TechDZ — Authentication Module
 // ============================================
 
@@ -40,7 +40,7 @@ const Auth = {
     try {
       const client = this.getClient();
       const options = { data: { full_name: fullName } };
-      // Token hCaptcha (optionnel : requis uniquement si le captcha est activé côté Supabase)
+      // Token Turnstile (optionnel : requis uniquement si le captcha est activé côté Supabase)
       if (captchaToken) options.captchaToken = captchaToken;
       if (emailRedirectTo || window.APP_URL) {
         options.emailRedirectTo = emailRedirectTo || this.authCallbackUrl();
@@ -75,7 +75,7 @@ const Auth = {
       const client = this.getClient();
       const options = {};
       if (window.APP_URL) options.emailRedirectTo = this.authCallbackUrl();
-      // Token hCaptcha (requis si le captcha est activé côté Supabase)
+      // Token Turnstile (requis si le captcha est activé côté Supabase)
       if (captchaToken) options.captchaToken = captchaToken;
       const { data, error } = await client.auth.resend({
         type: 'signup',
@@ -102,7 +102,7 @@ const Auth = {
       const lang = localStorage.getItem('techdz-lang');
       const redirectTo = window.APP_URL + 'change-password.html' + (lang ? '?lang=' + lang : '');
       const options = { redirectTo };
-      // Token hCaptcha (requis si le captcha est activé côté Supabase)
+      // Token Turnstile (requis si le captcha est activé côté Supabase)
       if (captchaToken) options.captchaToken = captchaToken;
       const { data, error } = await client.auth.resetPasswordForEmail(email, options);
       return { data, error };
@@ -137,7 +137,7 @@ const Auth = {
     try {
       const client = this.getClient();
       const options = {};
-      // Token hCaptcha (optionnel : requis uniquement si le captcha est activé côté Supabase)
+      // Token Turnstile (optionnel : requis uniquement si le captcha est activé côté Supabase)
       if (captchaToken) options.captchaToken = captchaToken;
       const { data, error } = await client.auth.signInWithPassword({
         email,
@@ -150,14 +150,15 @@ const Auth = {
     }
   },
 
-  // Réinitialiser le widget hCaptcha (token utilisé, expiré ou erreur)
+  // Réinitialiser le widget Cloudflare Turnstile (token utilisé, expiré ou erreur)
   resetCaptcha() {
     try {
-      if (window.hcaptcha && typeof window.hcaptcha.reset === 'function') {
-        window.hcaptcha.reset();
+      if (window.turnstile && typeof window.turnstile.reset === 'function') {
+        if (window.__turnstileWidgetId) window.turnstile.reset(window.__turnstileWidgetId);
+        else window.turnstile.reset();
       }
     } catch (e) {
-      console.error('Erreur lors de la réinitialisation hCaptcha :', e);
+      console.error('Erreur lors de la réinitialisation Turnstile :', e);
     }
   },
 
