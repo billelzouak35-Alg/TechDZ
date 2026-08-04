@@ -1,5 +1,5 @@
-<!DOCTYPE html>
-<html lang="fr" data-theme="dark">
+﻿<!DOCTYPE html>
+<html lang="fr" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -29,6 +29,7 @@
                     <label for="password"><span data-i18n="common.password">Mot de passe</span></label>
                     <input type="password" id="password" placeholder="••••••••" required>
                 </div>
+                <div id="turnstile-widget"></div>
                 <button type="submit" class="btn btn-primary btn-full" id="loginBtn">
                     <i class="fas fa-sign-in-alt"></i> <span data-i18n="common.signin">Se connecter</span>
                 </button>
@@ -44,6 +45,7 @@
         </div>
     </div>
 
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
     <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
     <script src="../config.js"></script>
     <script src="../translations.js"></script>
@@ -87,18 +89,103 @@
             }
         });
 
+        // ==========================================
+        // Cloudflare Turnstile — protection anti-bots
+        // ==========================================
+        let captchaToken = null;
+        let captchaReady = false;
+        window.__turnstileWidgetId = null;
+        window.turnstileCallback = (token) => { captchaToken = token; };
+        window.turnstileExpiredCallback = () => { captchaToken = null; };
+        window.turnstileErrorCallback = () => { captchaToken = null; captchaReady = false; };
+
+        // Le captcha n'est exigé que si une vraie Site Key est configurée
+        function turnstileEnabled() {
+            return !!window.TURNSTILE_SITE_KEY && !window.TURNSTILE_SITE_KEY.startsWith('VOTRE_');
+        }
+
+        function waitForTurnstile(timeoutMs) {
+            return new Promise((resolve) => {
+                const start = Date.now();
+                const check = () => {
+                    if (window.turnstile && typeof window.turnstile.render === 'function') return resolve(true);
+                    if (Date.now() - start > timeoutMs) return resolve(false);
+                    setTimeout(check, 100);
+                };
+                check();
+            });
+        }
+
+        // Recharger le script API s'il a échoué (réseau lent, blocage temporaire…)
+        function reloadTurnstileScript() {
+            const s = document.createElement('script');
+            s.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
+            s.async = true;
+            document.head.appendChild(s);
+        }
+
+        function renderTurnstile() {
+            try {
+                window.__turnstileWidgetId = turnstile.render(document.getElementById('turnstile-widget'), {
+                    sitekey: window.TURNSTILE_SITE_KEY,
+                    callback: window.turnstileCallback,
+                    'expired-callback': window.turnstileExpiredCallback,
+                    'error-callback': window.turnstileErrorCallback
+                });
+                captchaReady = true;
+            } catch (e) {
+                console.error('Erreur de rendu Turnstile :', e);
+                alertError.textContent = 'Impossible de charger le captcha de sécurité. Rechargez la page ou réessayez plus tard.';
+                alertError.style.display = 'block';
+            }
+        }
+
+        async function initTurnstile() {
+            if (!turnstileEnabled()) return;
+            let loaded = await waitForTurnstile(8000);
+            if (!loaded) reloadTurnstileScript();
+            loaded = await waitForTurnstile(8000);
+            if (!loaded) {
+                // API indisponible (réseau) : on ne bloque pas le formulaire et
+                // on réessaie en arrière-plan dès que l'API est accessible.
+                console.warn('Turnstile API unavailable — captcha temporarily skipped');
+                const retry = setInterval(() => {
+                    if (window.turnstile && typeof window.turnstile.render === 'function') {
+                        clearInterval(retry);
+                        renderTurnstile();
+                        if (alertError.style.display === 'block') alertError.style.display = 'none';
+                    }
+                }, 2000);
+                setTimeout(() => clearInterval(retry), 30000);
+                return;
+            }
+            renderTurnstile();
+        }
+
+        initTurnstile();
+
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
             const email = document.getElementById('email').value.trim();
             const password = document.getElementById('password').value;
 
+            // Turnstile requis mais absent → bloquer la soumission
+            if (turnstileEnabled() && captchaReady && !captchaToken) {
+                alertError.textContent = 'Veuillez compléter le captcha';
+                alertError.style.display = 'block';
+                return;
+            }
+
             loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> ' + t('admin.connecting');
             loginBtn.disabled = true;
             alertError.style.display = 'none';
 
-            const { data, error } = await Auth.signIn(email, password);
+            const { data, error } = await Auth.signIn(email, password, captchaToken);
 
             if (error) {
+                // Token consommé ou invalide → régénérer le captcha
+                captchaToken = null;
+                Auth.resetCaptcha();
                 alertError.textContent = error.message.includes('Invalid login') ? t('admin.loginError') : error.message;
                 alertError.style.display = 'block';
                 loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> ' + t('common.signin');
@@ -108,6 +195,8 @@
 
             const isAdmin = await Auth.isAdmin(data.user.id);
             if (!isAdmin) {
+                captchaToken = null;
+                Auth.resetCaptcha();
                 alertError.textContent = t('admin.notAdmin');
                 alertError.style.display = 'block';
                 await Auth.signOut();
@@ -116,6 +205,8 @@
                 return;
             }
 
+            captchaToken = null;
+            Auth.resetCaptcha();
             window.location.href = 'index.html';
         });
     </script>
