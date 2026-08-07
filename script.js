@@ -60,6 +60,200 @@ function updateLinksWithLang() {
 }
 updateLinksWithLang();
 
+/* ============================================
+   Online module — badge navbar, widget "en ligne",
+   polling 30s, toasts temps réel (Supabase Realtime)
+   ============================================ */
+const Online = {
+  count: 0,
+  users: [],
+  userSet: new Set(),
+  timer: null,
+  myId: null,
+  channel: null,
+  started: false,
+  toastTimer: {},
+
+  start(myId) {
+    if (this.started) return;
+    this.started = true;
+    this.myId = myId || null;
+    this.injectBadge();
+    this.injectToastContainer();
+    this.refresh();
+    this.timer = setInterval(() => this.refresh(), 30000);
+    this.subscribeRealtime();
+  },
+
+  stop() {
+    this.started = false;
+    if (this.timer) { clearInterval(this.timer); this.timer = null; }
+    if (this.channel && window.Auth) {
+      try { Auth.getClient().removeChannel(this.channel); } catch (e) {}
+      this.channel = null;
+    }
+  },
+
+  async refresh() {
+    try {
+      const { count } = await DB.getOnlineCount();
+      if (count !== undefined) {
+        this.count = count;
+        this.updateBadge();
+      }
+    } catch (e) {}
+    try {
+      const { data } = await DB.getOnlineUsers(20);
+      if (data) {
+        this.users = data;
+        this.userSet = new Set(data.map(u => u.id));
+        this.renderWidgets();
+        document.dispatchEvent(new CustomEvent('online-updated'));
+      }
+    } catch (e) {}
+  },
+
+  notifyUpdate() {
+    document.dispatchEvent(new CustomEvent('online-updated'));
+  },
+
+  // ==========================================
+  // Badge navbar : ● 12
+  // ==========================================
+  injectBadge() {
+    if (document.getElementById('onlineNavBadge')) return;
+    const navActions = document.querySelector('.navbar .nav-actions');
+    if (!navActions) return;
+    const lang = localStorage.getItem('techdz-lang') || 'fr';
+    const badge = document.createElement('a');
+    badge.className = 'online-badge';
+    badge.href = 'networking.html' + (lang ? '?lang=' + lang : '');
+    badge.title = t('online.title', 'Communauté en ligne');
+    badge.innerHTML = '<span class="online-badge-dot"></span><span class="online-badge-count" id="onlineNavBadge">0</span>';
+    navActions.insertBefore(badge, navActions.firstChild);
+  },
+
+  updateBadge() {
+    const el = document.getElementById('onlineNavBadge');
+    if (el) el.textContent = this.count;
+  },
+
+  // ==========================================
+  // Widgets : index.html (Communauté en ligne) + networking.html (En ligne maintenant)
+  // ==========================================
+  renderWidgets() {
+    const homeCount = document.getElementById('onlineCount');
+    if (homeCount) {
+      homeCount.textContent = this.count;
+      const homeLabel = document.getElementById('onlineCountLabel');
+      if (homeLabel) homeLabel.textContent = this.count > 1 ? t('online.members', 'membres en ligne') : t('online.member', 'membre en ligne');
+      const homeEmpty = document.getElementById('onlineEmpty');
+      if (homeEmpty) homeEmpty.style.display = this.users.length ? 'none' : 'block';
+      const homeGrid = document.getElementById('onlineAvatars');
+      if (homeGrid && this.users.length) {
+        const initials = (name) => (name || 'U').split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+        homeGrid.innerHTML = this.users.slice(0, 8).map(u => `
+          <div class="online-user" title="${u.full_name || ''}${u.city ? ' — ' + u.city : ''}">
+            <div class="online-avatar">${initials(u.full_name)}</div>
+            <span class="online-user-name">${u.full_name || ''}</span>
+            ${u.city ? `<span class="online-user-city"><i class="fas fa-map-marker-alt"></i>${u.city}</span>` : ''}
+          </div>`).join('');
+        const extra = document.getElementById('onlineExtra');
+        if (extra) extra.innerHTML = this.users.length > 8 ? `+${this.users.length - 8} ${t('online.others', 'autres')}` : '';
+      }
+    }
+
+    const nowSection = document.getElementById('onlineNowSection');
+    if (nowSection) {
+      nowSection.style.display = 'block';
+      const nowCount = document.getElementById('onlineNowCount');
+      if (nowCount) nowCount.textContent = this.count;
+      const nowList = document.getElementById('onlineNowList');
+      if (nowList) {
+        if (this.users.length === 0) {
+          nowList.innerHTML = `<div class="online-now-empty">${t('online.first', 'Soyez le premier à vous connecter !')}</div>`;
+        } else {
+          const initials = (name) => (name || 'U').split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+          const roleLabel = (r) => r === 'admin' ? t('common.admin', 'Admin') : r === 'moderator' ? t('common.moderator', 'Modérateur') : t('common.member', 'Membre');
+          nowList.innerHTML = this.users.map(u => `
+            <div class="online-now-item">
+              <div class="online-avatar">${initials(u.full_name)}</div>
+              <div class="online-now-info">
+                <strong>${u.full_name || ''}</strong>
+                <span>${u.job_title || ''}${u.city ? ' • ' + u.city : ''}</span>
+              </div>
+              <span class="member-role-tag ${u.role || 'member'}">${roleLabel(u.role)}</span>
+            </div>`).join('');
+        }
+      }
+    }
+  },
+
+  // ==========================================
+  // Toasts temps réel (connexion d'un membre)
+  // ==========================================
+  injectToastContainer() {
+    if (document.getElementById('toastContainer')) return;
+    const c = document.createElement('div');
+    c.id = 'toastContainer';
+    c.className = 'toast-container';
+    document.body.appendChild(c);
+  },
+
+  toast(message) {
+    const container = document.getElementById('toastContainer');
+    if (!container) return;
+    if (container.children.length >= 3) {
+      const first = container.firstChild;
+      if (first && first._timer) clearTimeout(first._timer);
+      first.remove();
+    }
+    const el = document.createElement('div');
+    el.className = 'toast';
+    el.innerHTML = `
+      <div class="toast-icon"><i class="fas fa-circle"></i></div>
+      <div class="toast-msg">${message}</div>
+      <button class="toast-close" aria-label="Fermer"><i class="fas fa-times"></i></button>`;
+    el.querySelector('.toast-close').addEventListener('click', () => {
+      clearTimeout(el._timer);
+      el.remove();
+    });
+    container.appendChild(el);
+    el._timer = setTimeout(() => el.remove(), 3000);
+  },
+
+  // ==========================================
+  // Supabase Realtime : détecter les nouvelles connexions
+  // ==========================================
+  subscribeRealtime() {
+    if (!window.Auth) return;
+    const self = this;
+    try {
+      const client = Auth.getClient();
+      this.channel = client.channel('online-presence')
+        .on('postgres_changes', {
+          event: 'UPDATE',
+          schema: 'public',
+          table: 'profiles'
+        }, payload => {
+          const rec = payload.new || {};
+          if (!rec.last_active || !rec.full_name) return;
+          if (self.myId && rec.id === self.myId) return;
+          const fresh = (Date.now() - new Date(rec.last_active).getTime()) < 5 * 60 * 1000;
+          if (!fresh) return;
+          if (self.userSet.has(rec.id)) return;
+          self.userSet.add(rec.id);
+          self.notifyUpdate();
+          self.toast(t('online.justConnected', '{name} vient de se connecter').replace('{name}', rec.full_name));
+        })
+        .subscribe();
+    } catch (e) {
+      console.warn('Realtime indisponible:', e.message);
+    }
+  }
+};
+window.Online = Online;
+
 function setLanguage(lang) {
   const html = document.documentElement;
   const tr = window.translations;
@@ -231,6 +425,8 @@ document.addEventListener('DOMContentLoaded', () => {
     if (dropdownName) dropdownName.textContent = profile?.full_name || 'Utilisateur';
     if (dropdownEmail) dropdownEmail.textContent = user.email;
     if (adminLink && profile?.role === 'admin') adminLink.style.display = 'block';
+    if (window.Auth) Auth.startActivityTracking();
+    if (window.Online) Online.start(user?.id || null);
   }
 
   function showLoggedOut() {
@@ -240,6 +436,8 @@ document.addEventListener('DOMContentLoaded', () => {
     if (authLoggedIn) authLoggedIn.style.display = 'none';
     if (mobileAuthOut) mobileAuthOut.style.display = 'block';
     if (mobileAuthIn) mobileAuthIn.style.display = 'none';
+    if (window.Auth) Auth.stopActivityTracking();
+    if (window.Online) Online.start(null);
   }
 
   // User menu toggle
@@ -277,6 +475,9 @@ document.addEventListener('DOMContentLoaded', () => {
     Auth.onAuthStateChange(async (event, session) => {
       console.log('Auth event:', event);
       if (session?.user) {
+        if (event === 'SIGNED_IN' && window.Auth) {
+          Auth.logConnection('login');
+        }
         const { data: profile, error } = await Auth.getProfile(session.user.id);
         if (error) console.warn('Profile error:', error);
         showLoggedIn(session.user, profile);
