@@ -180,6 +180,8 @@ const Auth = {
   //   - absent : redirige vers index.html (comportement par défaut)
   async signOut(redirectUrl) {
     try {
+      this.logConnection('logout');
+      this.stopActivityTracking();
       const client = this.getClient();
       const { error } = await client.auth.signOut();
       localStorage.removeItem('techdz-user');
@@ -255,6 +257,85 @@ const Auth = {
   async isModerator(userId) {
     const { data } = await this.getProfile(userId);
     return data && ['admin', 'moderator'].includes(data.role);
+  },
+
+  // ==========================================
+  // SUIVI D'ACTIVITÉ (présence en ligne)
+  // ==========================================
+  tracking: {
+    started: false,
+    visible: true,
+    timer: null,
+    lastBeat: 0
+  },
+
+  // Démarre le suivi : page_view au chargement, puis heartbeat
+  // toutes les 30 secondes tant que l'onglet est visible.
+  // Le heartbeat s'arrête quand l'onglet passe en arrière-plan.
+  startActivityTracking() {
+    if (this.tracking.started) return;
+    this.tracking.started = true;
+    this.tracking.visible = !document.hidden;
+
+    this.logConnection('page_view');
+    this.updateLastActive(true);
+
+    this.tracking.timer = setInterval(() => {
+      if (!this.tracking.visible) return;
+      if (Date.now() - this.tracking.lastBeat < 30000) return;
+      this.updateLastActive();
+    }, 30000);
+
+    document.addEventListener('visibilitychange', () => {
+      this.tracking.visible = !document.hidden;
+      if (this.tracking.visible) {
+        this.updateLastActive(true);
+      }
+    });
+
+    // Déconnexion douce (fermeture d'onglet) → trace 'logout'
+    window.addEventListener('pagehide', () => {
+      this.logConnection('logout');
+    });
+  },
+
+  // Arrête le suivi (déconnexion, etc.)
+  stopActivityTracking() {
+    this.tracking.started = false;
+    if (this.tracking.timer) {
+      clearInterval(this.tracking.timer);
+      this.tracking.timer = null;
+    }
+  },
+
+  // Met à jour profiles.last_active + log heartbeat (30s max)
+  async updateLastActive(force = false) {
+    const now = Date.now();
+    if (!force && now - this.tracking.lastBeat < 30000) return;
+    this.tracking.lastBeat = now;
+    try {
+      const client = this.getClient();
+      const { data: { user } } = await client.auth.getUser();
+      if (!user) return;
+      await client
+        .from('profiles')
+        .update({ last_active: new Date().toISOString() })
+        .eq('id', user.id);
+      if (!force) this.logConnection('heartbeat');
+    } catch (e) {
+      // Erreur silencieuse : le suivi ne doit jamais bloquer la page
+    }
+  },
+
+  // Trace une action dans connection_logs (login/logout/heartbeat/page_view)
+  async logConnection(action) {
+    try {
+      if (window.DB && typeof window.DB.logConnection === 'function') {
+        await window.DB.logConnection(action);
+      }
+    } catch (e) {
+      // Silencieux
+    }
   }
 };
 
