@@ -303,12 +303,12 @@ input {
 
 .nav-links {
   display: flex;
-  gap: 8px;
+  gap: 4px;
 }
 
 .nav-link {
-  padding: 8px 16px;
-  font-size: 0.9rem;
+  padding: 6px 10px;
+  font-size: 0.85rem;
   font-weight: 500;
   color: var(--text-secondary);
   border-radius: var(--radius-sm);
@@ -1795,6 +1795,11 @@ section {
 /* ============================================
    Responsive
    ============================================ */
+@media (max-width: 1300px) {
+  .nav-links { display: none; }
+  .mobile-toggle { display: flex; }
+}
+
 @media (max-width: 1024px) {
   .hero-container {
     grid-template-columns: 1fr;
@@ -2284,4 +2289,303 @@ body > section,
 body > footer {
   position: relative;
   z-index: 1;
+}
+
+/* ============================================
+   Online presence � widget "Communaut� en ligne", badge navbar, toasts
+   ============================================ */
+
+.online-section {
+  padding: 40px 0;
+}
+.online-card {
+  position: relative;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-xl);
+  padding: 28px 32px;
+  overflow: hidden;
+}
+.online-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(600px 200px at 15% 0%, rgba(16,185,129,0.08), transparent 60%);
+  pointer-events: none;
+}
+.online-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.online-head-title {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.online-head-title h2 { margin: 0; font-size: 1.5rem; }
+.online-head-title .section-badge { display: inline-block; }
+.online-count {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  background: rgba(16,185,129,0.1);
+  border: 1px solid rgba(16,185,129,0.25);
+  border-radius: var(--radius-lg);
+  padding: 10px 18px;
+}
+.online-count span:first-child {
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: var(--secondary, #10B981);
+  font-variant-numeric: tabular-nums;
+}
+.online-count span:last-child {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+.online-pulse {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.online-pulse::before {
+  content: '';
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #10B981;
+  animation: online-ping 1.8s cubic-bezier(0,0,0.2,1) infinite;
+}
+.online-pulse::after {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #10B981;
+  position: relative;
+  box-shadow: 0 0 8px rgba(16,185,129,0.8);
+}
+@keyframes online-ping {
+  0% { transform: scale(1); opacity: 0.7; }
+  80%, 100% { transform: scale(2.4); opacity: 0; }
+}
+.online-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: 22px;
+}
+.online-user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 14px 8px 8px;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 999px;
+  transition: all 0.2s;
+}
+.online-user:hover { border-color: rgba(16,185,129,0.4); transform: translateY(-1px); }
+.online-avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: var(--gradient-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: #fff;
+  flex-shrink: 0;
+}
+.online-user-name { font-size: 0.85rem; font-weight: 600; max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.online-user-city { font-size: 0.72rem; color: var(--text-muted); display: flex; align-items: center; gap: 4px; }
+.online-user-city i { font-size: 0.6rem; }
+.online-empty {
+  margin-top: 18px;
+  padding: 20px;
+  text-align: center;
+  color: var(--text-muted);
+  background: var(--bg-primary);
+  border: 1px dashed var(--border-color);
+  border-radius: var(--radius-md);
+}
+.online-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 20px;
+}
+.online-extra { font-size: 0.85rem; color: var(--text-muted); }
+
+/* Badge navbar : ? 12 */
+.online-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: rgba(16,185,129,0.1);
+  border: 1px solid rgba(16,185,129,0.3);
+  color: var(--text-primary);
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+.online-badge:hover {
+  background: rgba(16,185,129,0.18);
+  transform: translateY(-1px);
+}
+.online-badge-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #10B981;
+  box-shadow: 0 0 6px rgba(16,185,129,0.9);
+  animation: online-ping 2.2s cubic-bezier(0,0,0.2,1) infinite;
+}
+.online-badge-count { font-variant-numeric: tabular-nums; }
+
+/* Networking : "En ligne maintenant" */
+.online-now {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 20px 24px;
+  margin-bottom: 24px;
+}
+.online-now-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+.online-now-header h2 { font-size: 1.1rem; margin: 0; }
+.online-now-count {
+  margin-left: auto;
+  background: rgba(16,185,129,0.1);
+  color: var(--secondary, #10B981);
+  font-weight: 800;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 0.85rem;
+}
+.online-now-list { display: flex; flex-direction: column; gap: 8px; }
+.online-now-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+}
+.online-now-item .online-avatar { width: 42px; height: 42px; }
+.online-now-info { flex: 1; min-width: 0; }
+.online-now-info strong { display: block; font-size: 0.9rem; }
+.online-now-info span { font-size: 0.78rem; color: var(--text-secondary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.online-now-empty {
+  text-align: center;
+  padding: 18px;
+  color: var(--text-muted);
+  background: var(--bg-primary);
+  border: 1px dashed var(--border-color);
+  border-radius: var(--radius-md);
+  font-size: 0.9rem;
+}
+
+/* Networking : s�parateurs En ligne / Hors ligne + pastille carte */
+.members-section-sep {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--secondary, #10B981);
+  margin: 8px 0 2px;
+}
+.members-section-sep.offline { color: var(--text-muted); }
+.online-sep-dot { font-size: 0.5rem; vertical-align: middle; }
+.member-card { position: relative; }
+.member-card.is-online { border-color: rgba(16,185,129,0.4); }
+.online-card-dot {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: rgba(16,185,129,0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.online-card-dot span {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #10B981;
+  box-shadow: 0 0 6px rgba(16,185,129,0.9);
+}
+
+/* Toasts temps r�el */
+.toast-container {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: min(340px, calc(100vw - 48px));
+}
+.toast {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 14px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-left: 3px solid #10B981;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  animation: toast-in 0.3s cubic-bezier(0.4,0,0.2,1);
+}
+@keyframes toast-in {
+  from { transform: translateX(30px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+.toast-icon { color: #10B981; font-size: 0.7rem; margin-top: 5px; }
+.toast-msg { flex: 1; font-size: 0.85rem; line-height: 1.45; }
+.toast-close {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 2px;
+  font-size: 0.8rem;
+}
+.toast-close:hover { color: var(--text-primary); }
+
+@media (max-width: 768px) {
+  .online-card { padding: 20px; }
+  .online-head-title h2 { font-size: 1.2rem; }
+  .online-count span:first-child { font-size: 1.4rem; }
+  .online-badge { padding: 5px 9px; gap: 5px; }
+  .online-badge-dot { width: 6px; height: 6px; }
+  .toast-container { left: 16px; right: 16px; max-width: none; }
 }
